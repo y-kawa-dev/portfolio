@@ -227,7 +227,18 @@
                         <div>
                             <h4 class="font-bold text-slate-700 text-sm mb-1"><i class="fas fa-terminal mr-2 text-slate-400"></i>WinDbg連携 自動ダンプ解析</h4>
                             <p class="text-sm text-slate-600 leading-relaxed">
-                                <code>cdb.exe</code>をバックグラウンドで起動し、Windowsダンプファイル（.dmp）を自動解析。<code>!analyze -v</code>の結果をAIに渡し、人間が読める形式で解説します。
+                                <code>cdb.exe</code>をバックグラウンドで起動し、Windowsダンプファイル（.dmp）を自動解析。<br>
+                                <span class="block mt-2 bg-slate-50 p-2 rounded text-xs border border-slate-100 font-mono text-slate-500">
+                                    !analyze -v<br>
+                                    .ecxr (例外コンテキスト)<br>
+                                    k (スタックトレース)<br>
+                                    !vm (仮想メモリ)<br>
+                                    !locks (デッドロック検出)<br>
+                                    lm t n (ドライバ一覧)
+                                </span>
+                                <span class="block mt-2">これらを一括実行し、AIが人間が読める形式で解説します。</span>
+                                <span class="block mt-2 font-semibold text-slate-700">エージェント的振る舞い:</span>
+                                <span class="text-xs text-slate-500 block">AIのプロンプトに「情報不足なら次のコマンドを人間に提案せよ」と指示を追加し、自律的なデバッグ支援を促進します。</span>
                             </p>
                         </div>
                         <div>
