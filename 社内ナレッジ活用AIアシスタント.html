@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>開発実績：社内ナレッジ活用AIアシスタント (RAG)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Noto Sans JP', sans-serif; }
+        .gradient-header { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
+        
+        /* デモエリアのサイズ設定（初期のコンパクトなサイズ） */
+        .demo-container { min-height: 500px; }
+        .chat-area { height: 350px; }
+        .admin-area { height: 350px; display: none; }
+        
+        .tab-active { border-bottom: 2px solid #3b82f6; color: #3b82f6; }
+        .tech-card { 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-top: 4px solid transparent;
+        }
+        .tech-card:hover { 
+            transform: translateY(-8px); 
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .tech-card.blue { border-top-color: #3b82f6; }
+        .tech-card.emerald { border-top-color: #10b981; }
+        .tech-card.indigo { border-top-color: #6366f1; }
+        .tech-card.orange { border-top-color: #f59e0b; }
+        .tech-card.purple { border-top-color: #a855f7; }
+
+        /* ライトボックス（拡大表示）のスタイル */
+        #lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 10000;
+            cursor: zoom-out;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        #lightbox.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+        }
+        #lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+            box-shadow: 0 0 40px rgba(0,0,0,0.6);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        #lightbox.active img { transform: scale(1); }
+        
+        /* キャプチャ画像上のズームアイコンオーバーレイ */
+        .zoom-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease;
+            pointer-events: none;
+        }
+        .zoom-overlay i {
+            color: white;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 0.3s ease;
+        }
+        .group:hover .zoom-overlay { background: rgba(0,0,0,0.3); }
+        .group:hover .zoom-overlay i { opacity: 1; transform: scale(1); }
+
+        /* スクロールバー */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-[#f8fafc] text-slate-800">
+
+    <!-- ライトボックス用モーダル構造 -->
+    <div id="lightbox" onclick="closeLightbox()">
+        <img id="lightbox-img" src="" alt="拡大画像">
+    </div>
+
+    <!-- Hero Section -->
+    <header class="gradient-header text-white py-24 px-6 relative overflow-hidden text-center border-b border-slate-800">
+        <div class="absolute top-0 right-0 w-1/3 h-full bg-blue-500/10 blur-[100px] rounded-full translate-x-1/2 -translate-y-1/2"></div>
+        <div class="max-w-4xl mx-auto relative z-10">
+            <div class="flex items-center justify-center gap-2 mb-6">
+                <span class="px-4 py-1.5 bg-blue-500/20 text-blue-400 text-xs font-bold rounded-full border border-blue-500/30 tracking-widest uppercase">General-Purpose RAG Solution</span>
+            </div>
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-8 leading-tight text-white">
+                社内ナレッジ活用AIアシスタント
+            </h1>
+            <p class="text-slate-400 text-xl mb-12 max-w-2xl mx-auto leading-relaxed text-center">
+                規定、マニュアル、議事録——社内の全ドキュメントを知識化。<br>
+                LangChainとベクトル検索で「必要な情報」を即座に引き出すRAGシステム。
+            </p>
+            <div class="flex justify-center gap-4">
+                <div class="flex items-center gap-2 text-sm text-slate-300 bg-white/5 px-5 py-3 rounded-xl border border-white/10 shadow-inner">
+                    <i data-lucide="terminal" class="w-5 h-5 text-blue-400"></i> Python / Streamlit
+                </div>
+                <div class="flex items-center gap-2 text-sm text-slate-300 bg-white/5 px-5 py-3 rounded-xl border border-white/10 shadow-inner">
+                    <i data-lucide="link" class="w-5 h-5 text-blue-400"></i> LangChain / Gemini
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-6 py-16 space-y-32">
+
+        <!-- Project Overview & Impact -->
+        <section id="overview" class="grid lg:grid-cols-2 gap-16 items-start">
+            <div class="space-y-8 text-justify text-left">
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-200">
+                        <i data-lucide="target"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold font-bold">導入の狙いと拡張性</h2>
+                </div>
+                <div class="p-8 bg-white rounded-3xl border border-slate-200 shadow-sm relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-rose-50 rounded-bl-full -mr-12 -mt-12 transition-all group-hover:scale-110"></div>
+                    <h3 class="font-bold text-slate-900 mb-4 flex items-center gap-2 relative z-10 text-justify">
+                        <i data-lucide="alert-circle" class="text-rose-500 w-5 h-5"></i> 散在する社内知識の集約
+                    </h3>
+                    <p class="text-sm text-slate-600 leading-relaxed relative z-10 text-justify">
+                        社内規定、業務マニュアル、技術資料など、組織には膨大なドキュメントが点在しており、検索性の低さが生産性向上のボトルネックとなっていました。本システムは、これらの多岐にわたる「組織の知識」を一箇所で、かつ自然言語で検索可能にすることを目的に開発しました。
+                    </p>
+                </div>
+                <div class="p-8 bg-blue-50 rounded-3xl border border-blue-100 shadow-sm relative overflow-hidden group text-justify">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-blue-100 rounded-bl-full -mr-12 -mt-12 transition-all group-hover:scale-110"></div>
+                    <h3 class="font-bold text-blue-900 mb-4 flex items-center gap-2 relative z-10">
+                        <i data-lucide="layers" class="text-blue-600 w-5 h-5"></i> あらゆる社内ファイルへの応用
+                    </h3>
+                    <p class="text-sm text-blue-800 leading-relaxed relative z-10 text-justify">
+                        今回のプロトタイプは「社内規定」を例としていますが、システム構成自体は**社内のあらゆるドキュメントに対応可能**な設計となっています。人事規定のみならず、製品仕様書、過去のプロジェクト報告書、カスタマーサポートのFAQなどをアップロードするだけで、即座に専門特化したAIアシスタントを構築できます。
+                    </p>
+                </div>
+            </div>
+            <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm self-stretch flex flex-col justify-center">
+                <h3 class="text-center font-bold mb-8 text-sm text-slate-400 uppercase tracking-widest text-[10px]">情報検索コストの削減見込</h3>
+                <div class="h-80">
+                    <canvas id="impactChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Feature Overview & Flow -->
+        <section id="functionality" class="space-y-16">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-emerald-200">
+                    <i data-lucide="cog"></i>
+                </div>
+                <h2 class="text-2xl font-bold">機能の概略とフロー</h2>
+            </div>
+            
+            <div class="grid lg:grid-cols-3 gap-8 text-justify text-left">
+                <!-- 主要機能 -->
+                <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm lg:col-span-1 text-justify">
+                    <h3 class="font-bold mb-6 text-slate-800 border-b border-slate-100 pb-4 flex items-center gap-2 uppercase tracking-tighter text-sm">
+                        <i data-lucide="list-checks" class="text-emerald-500"></i> 主要機能
+                    </h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <div class="mt-1 bg-emerald-100 text-emerald-600 p-1 rounded-full"><i data-lucide="check" class="w-3 h-3 text-justify"></i></div>
+                            <div>
+                                <p class="text-sm font-bold">AI回答・根拠提示</p>
+                                <p class="text-xs text-slate-500 text-justify">質問に対し、参照元の「ファイル名」を添えて回答。根拠を常に確認可能です。</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3 text-justify">
+                            <div class="mt-1 bg-emerald-100 text-emerald-600 p-1 rounded-full text-justify"><i data-lucide="check" class="w-3 h-3 text-justify"></i></div>
+                            <div>
+                                <p class="text-sm font-bold text-justify">全ドキュメント形式対応</p>
+                                <p class="text-xs text-slate-500 text-justify">PDF, Excel, Word, PPTX、さらにテキストファイルなど、形式を問わず解析可能です。</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <div class="mt-1 bg-emerald-100 text-emerald-600 p-1 rounded-full"><i data-lucide="check" class="w-3 h-3 text-justify text-justify text-justify text-justify text-justify text-justify text-justify text-justify text-justify text-justify text-justify text-justify text-justify text-justify text-justify"></i></div>
+                            <div>
+                                <p class="text-sm font-bold text-justify">知識ベースの動的更新</p>
+                                <p class="text-xs text-slate-500">管理画面から新資料を追加するだけで、AIの知識が即座に同期されます。</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- ユーザーフロー -->
+                <div class="bg-slate-900 p-8 rounded-3xl shadow-xl text-white text-justify">
+                    <h3 class="font-bold mb-8 text-blue-400 flex items-center gap-2 uppercase tracking-tighter text-sm">
+                        <i data-lucide="user" class="w-5 h-5 text-justify"></i> 利用者フロー
+                    </h3>
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-4 group text-justify">
+                            <div class="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center group-hover:border-blue-500 transition-colors text-justify">
+                                <i data-lucide="message-circle" class="w-5 h-5 text-blue-400 text-justify"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-xs font-bold text-slate-200 text-justify">1. 自然言語で質問</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 group pl-6 border-l-2 border-slate-800 text-justify">
+                            <div class="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center group-hover:border-blue-500 transition-colors">
+                                <i data-lucide="search" class="w-5 h-5 text-blue-400"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-xs font-bold text-slate-200">2. ベクトル検索</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 group pl-6 border-l-2 border-slate-800 text-justify text-justify">
+                            <div class="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center group-hover:border-blue-500 transition-colors">
+                                <i data-lucide="cpu" class="w-5 h-5 text-blue-400"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-xs font-bold text-slate-200 text-justify">3. 回答生成 (Gemini)</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 group text-justify">
+                            <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/20 text-justify text-justify">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-white text-justify"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-xs font-bold text-white text-justify">4. 根拠付き回答提示</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 管理者フロー -->
+                <div class="bg-indigo-900 p-8 rounded-3xl shadow-xl text-white">
+                    <h3 class="font-bold mb-8 text-indigo-300 flex items-center gap-2 uppercase tracking-tighter text-sm">
+                        <i data-lucide="shield-check" class="w-5 h-5"></i> 管理者フロー
+                    </h3>
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-4 group">
+                            <div class="w-10 h-10 rounded-xl bg-indigo-800 border border-indigo-700 flex items-center justify-center group-hover:border-indigo-400 transition-colors">
+                                <i data-lucide="file-up" class="w-5 h-5 text-indigo-300"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-xs font-bold text-indigo-100">1. 新ドキュメント追加</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 group pl-6 border-l-2 border-indigo-800">
+                            <div class="w-10 h-10 rounded-xl bg-indigo-800 border border-indigo-700 flex items-center justify-center group-hover:border-indigo-400 transition-colors">
+                                <i data-lucide="scan-text" class="w-5 h-5 text-indigo-300"></i>
+                            </div>
+                            <div class="flex-1 text-justify">
+                                <p class="text-xs font-bold text-indigo-100">2. 全文自動解析・分割</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 group pl-6 border-l-2 border-indigo-800 text-justify">
+                            <div class="w-10 h-10 rounded-xl bg-indigo-800 border border-indigo-700 flex items-center justify-center group-hover:border-indigo-400 transition-colors text-justify">
+                                <i data-lucide="hash" class="w-5 h-5 text-indigo-300 text-justify"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-xs font-bold text-indigo-100">3. ベクトル化 (Embedding)</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 group">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/20 text-justify text-justify">
+                                <i data-lucide="refresh-cw" class="w-5 h-5 text-white"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-xs font-bold text-white text-justify">4. 知識DB自動更新</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Technical Stack Section -->
+        <section id="tech-stack" class="text-justify text-justify">
+            <div class="flex items-center gap-3 mb-12">
+                <div class="w-10 h-10 bg-slate-800 rounded-xl flex items-center justify-center text-white shadow-lg">
+                    <i data-lucide="settings"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-justify">技術スタックと選定理由</h2>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 text-left text-justify">
+                <div class="tech-card blue bg-white p-8 rounded-3xl border border-slate-200 shadow-sm text-justify">
+                    <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center">
+                        <i data-lucide="brain"></i>
+                    </div>
+                    <h4 class="font-bold text-lg text-slate-800">LLM</h4>
+                    <p class="text-blue-600 font-bold text-sm tracking-tight uppercase text-justify">Gemini 2.5 Flash</p>
+                    <p class="text-xs text-slate-500 leading-relaxed text-justify text-justify">
+                        高い推論能力と高速なレスポンスを重視。広大なコンテキストウィンドウにより、長大な規定やマニュアルを精度高く要約できるため採用しました。
+                    </p>
+                </div>
+                <div class="tech-card emerald bg-white p-8 rounded-3xl border border-slate-200 shadow-sm text-justify text-justify">
+                    <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center text-justify">
+                        <i data-lucide="database"></i>
+                    </div>
+                    <h4 class="font-bold text-lg text-slate-800 font-bold text-justify">Embedding</h4>
+                    <p class="text-emerald-600 font-bold text-sm tracking-tight uppercase text-justify">multilingual-e5-small</p>
+                    <p class="text-xs text-slate-500 leading-relaxed text-justify text-justify text-justify">
+                        外部APIのレート制限を回避するためローカルモデルを採用。日本語の専門用語を含む検索において、高精度かつ高速なセマンティック検索を可能にします。
+                    </p>
+                </div>
+                <div class="tech-card indigo bg-white p-8 rounded-3xl border border-slate-200 shadow-sm text-justify">
+                    <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center">
+                        <i data-lucide="search"></i>
+                    </div>
+                    <h4 class="font-bold text-lg text-slate-800">Vector DB</h4>
+                    <p class="text-indigo-600 font-bold text-sm tracking-tight uppercase">FAISS (Local)</p>
+                    <p class="text-xs text-slate-500 leading-relaxed text-justify text-justify text-justify text-justify">
+                        社内ローカル運用を想定し、軽量かつメモリ効率の高い検索エンジンを採用。数千ドキュメント規模でもミリ秒単位での検索が可能です。
+                    </p>
+                </div>
+                <div class="tech-card orange bg-white p-8 rounded-3xl border border-slate-200 shadow-sm text-justify text-justify">
+                    <div class="w-12 h-12 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center">
+                        <i data-lucide="box"></i>
+                    </div>
+                    <h4 class="font-bold text-lg text-slate-800 font-bold text-justify">Framework</h4>
+                    <p class="text-orange-600 font-bold text-sm tracking-tight uppercase">LangChain / Streamlit</p>
+                    <p class="text-xs text-slate-500 leading-relaxed text-justify text-justify">
+                        複雑なRAGパイプラインを簡潔に実装。管理者向けUIを含めたフルスタックなWebアプリケーションを、汎用性を維持したまま構築しました。
+                    </p>
+                </div>
+                <div class="tech-card purple bg-white p-8 rounded-3xl border border-slate-200 shadow-sm text-justify text-justify">
+                    <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center text-justify">
+                        <i data-lucide="file-type"></i>
+                    </div>
+                    <h4 class="font-bold text-lg text-slate-800 text-justify">Data Loader</h4>
+                    <p class="text-purple-600 font-bold text-sm tracking-tight uppercase">Unstructured</p>
+                    <p class="text-xs text-slate-500 leading-relaxed text-justify text-justify text-justify">
+                        PDF、Excel、PPTXなど、企業内に存在する多様なデータ形式から構造化情報を抽出し、知識化するためのコア技術です。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Visual Showcase (Screenshots) - コンパクト横並び＋クリック拡大 -->
+        <section id="visuals" class="scroll-mt-24 text-justify">
+            <div class="flex items-center gap-3 mb-6 text-left">
+                <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-200">
+                    <i data-lucide="monitor"></i>
+                </div>
+                <h2 class="text-2xl font-bold">システムインターフェース</h2>
+            </div>
+            
+            <p class="text-xs text-slate-400 mb-8 flex items-center gap-1 text-justify text-left"><i data-lucide="mouse-pointer-2" class="w-3 h-3 text-justify"></i> 画像をクリックすると拡大表示します</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center text-justify text-justify">
+                <!-- メイン画面 -->
+                <div class="group cursor-pointer relative" onclick="openLightbox('RAG_TOP.jpg')">
+                    <div class="rounded-2xl overflow-hidden shadow-lg border border-slate-200 mb-4 bg-white p-1 relative">
+                        <img src="RAG_TOP.jpg" alt="Application Overview" class="w-full h-40 object-cover rounded-xl group-hover:scale-[1.05] transition-transform duration-500">
+                        <div class="zoom-overlay rounded-xl"><i data-lucide="zoom-in" class="w-8 h-8"></i></div>
+                    </div>
+                    <p class="font-bold text-[11px] text-slate-500 uppercase tracking-widest text-center">メイン画面</p>
+                </div>
+                
+                <!-- AIチャット -->
+                <div class="group cursor-pointer relative" onclick="openLightbox('RAG_質問.jpg')">
+                    <div class="rounded-2xl overflow-hidden shadow-lg border border-slate-200 mb-4 bg-white p-1 relative">
+                        <img src="RAG_質問.jpg" alt="Chat Interface" class="w-full h-40 object-cover rounded-xl group-hover:scale-[1.05] transition-transform duration-500">
+                        <div class="zoom-overlay rounded-xl"><i data-lucide="zoom-in" class="w-8 h-8 text-center"></i></div>
+                    </div>
+                    <p class="font-bold text-[11px] text-slate-500 uppercase tracking-widest text-center">AIチャット・根拠提示</p>
+                </div>
+
+                <!-- 管理者メニュー -->
+                <div class="group cursor-pointer relative text-center" onclick="openLightbox('RAG_管理者メニュー.jpg')">
+                    <div class="rounded-2xl overflow-hidden shadow-lg border border-slate-200 mb-4 bg-white p-1 relative">
+                        <img src="RAG_管理者メニュー.jpg" alt="Admin Panel" class="w-full h-40 object-cover rounded-xl group-hover:scale-[1.05] transition-transform duration-500 text-center">
+                        <div class="zoom-overlay rounded-xl"><i data-lucide="zoom-in" class="w-8 h-8"></i></div>
+                    </div>
+                    <p class="font-bold text-[11px] text-slate-500 uppercase tracking-widest text-center">管理者メニュー</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dynamic Demo Simulator -->
+        <section id="demo" class="bg-white rounded-[2rem] shadow-2xl border border-slate-200 overflow-hidden scroll-mt-24 text-justify">
+            <div class="bg-slate-50 border-b border-slate-200 px-8 py-5 flex flex-wrap justify-between items-center gap-4 text-left">
+                <div class="flex gap-10">
+                    <button onclick="switchTab('user')" id="tabUser" class="text-sm font-bold pb-2 tab-active transition-all">
+                        ユーザー画面 (質問デモ)
+                    </button>
+                    <button onclick="switchTab('admin')" id="tabAdmin" class="text-sm font-bold pb-2 text-slate-400 hover:text-slate-600 transition-all text-left">
+                        管理者画面
+                    </button>
+                </div>
+                <div class="flex items-center gap-2 px-3 py-1.5 bg-slate-200 rounded-lg text-[10px] font-mono text-slate-600 text-justify">
+                    <i data-lucide="key-round" class="w-3 h-3 text-justify"></i> PASS: password1234
+                </div>
+            </div>
+
+            <div class="p-8 lg:p-12 demo-container text-justify">
+                <div id="userDemo" class="space-y-6">
+                    <div id="chatBox" class="chat-area overflow-y-auto space-y-6 pr-4 border-b border-slate-100 mb-8 pb-8 text-justify">
+                        <div class="flex gap-4 text-justify">
+                            <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-200 text-justify">
+                                <i data-lucide="bot" class="w-5 h-5 text-white text-justify"></i>
+                            </div>
+                            <div class="bg-slate-100 p-5 rounded-2xl rounded-tl-none text-sm max-w-[85%] border border-slate-200 leading-relaxed text-justify">
+                                こんにちは！社内ナレッジの専門家です。規定だけでなく、マニュアルや技術資料についても聞いてください。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-3">
+                        <button onclick="sendSample('慶弔休暇の申請期限と、必要な書類について教えてください。')" class="text-xs px-5 py-2.5 bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 rounded-xl border border-blue-200 transition-all shadow-sm">慶弔休暇について</button>
+                        <button onclick="sendSample('副業は認められていますか？条件があれば教えてください。')" class="text-xs px-5 py-2.5 bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 rounded-xl border border-blue-200 transition-all shadow-sm text-justify">副業の規定</button>
+                        <button onclick="sendSample('社外へのPC持ち出しに関する規定を教えてください。')" class="text-xs px-5 py-2.5 bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 rounded-xl border border-blue-200 transition-all shadow-sm">PCの持ち出しルール</button>
+                    </div>
+                </div>
+
+                <div id="adminDemo" class="admin-area text-justify text-justify">
+                    <div id="adminLogin" class="flex flex-col items-center justify-center h-full space-y-6 text-justify">
+                        <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center text-slate-300">
+                            <i data-lucide="lock" class="w-8 h-8"></i>
+                        </div>
+                        <h4 class="font-bold text-slate-800 text-sm uppercase tracking-tight text-justify">管理者認証</h4>
+                        <div class="flex gap-3 w-full max-w-sm text-justify">
+                            <input type="password" id="adminPass" value="password1234" placeholder="password1234" class="flex-1 px-5 py-3 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                            <button onclick="tryAdminLogin()" class="px-8 py-3 bg-slate-900 text-white rounded-xl text-sm font-bold hover:bg-slate-800 transition-all">認証</button>
+                        </div>
+                    </div>
+                    <div id="adminPanel" class="hidden h-full">
+                        <div class="grid md:grid-cols-2 gap-10 h-full">
+                            <div class="p-8 bg-slate-50 rounded-2xl border border-slate-200 space-y-6 flex flex-col justify-center text-left text-justify">
+                                <h4 class="font-bold text-sm flex items-center gap-2 text-slate-700 uppercase tracking-tighter"><i data-lucide="plus-circle" class="text-blue-600 w-5 h-5"></i> 資料の追加</h4>
+                                <div class="border-2 border-dashed border-slate-300 rounded-2xl p-10 text-center bg-white hover:border-blue-400 transition-all group cursor-pointer text-justify">
+                                    <i data-lucide="upload-cloud" class="mx-auto mb-4 text-slate-400 group-hover:text-blue-500 transition-colors"></i>
+                                    <p class="text-xs text-slate-500 mb-6 font-light">PDF / Word / Excel / PPTX / Text 対応</p>
+                                    <button class="text-xs px-6 py-3 bg-blue-600 text-white rounded-lg font-bold shadow-lg shadow-blue-100 uppercase tracking-widest text-justify">ファイルを一括アップロード</button>
+                                </div>
+                            </div>
+                            <div class="p-8 bg-slate-50 rounded-2xl border border-slate-200 space-y-6 flex flex-col justify-center text-left text-justify">
+                                <h4 class="font-bold text-sm flex items-center gap-2 text-slate-700 uppercase tracking-tighter text-justify text-center"><i data-lucide="list" class="text-indigo-600 w-5 h-5"></i> 知識ベース管理</h4>
+                                <div class="space-y-3 text-justify">
+                                    <div class="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-100 text-xs shadow-sm">
+                                        <span class="font-medium text-slate-700">就業規則_特別休暇編.pdf</span>
+                                        <button class="text-rose-500 hover:bg-rose-50 p-2 rounded-lg text-justify text-justify"><i data-lucide="trash-2" class="w-4 h-4 text-justify"></i></button>
+                                    </div>
+                                    <div class="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-100 text-xs shadow-sm text-justify">
+                                        <span class="font-medium text-slate-700 text-center">製品サポートマニュアル.docx</span>
+                                        <button class="text-rose-500 hover:bg-rose-50 p-2 rounded-lg text-center text-justify"><i data-lucide="trash-2" class="w-4 h-4 text-justify"></i></button>
+                                    </div>
+                                </div>
+                                <button class="w-full py-4 bg-rose-50 text-rose-600 text-[10px] font-bold rounded-xl border border-rose-100 hover:bg-rose-100 transition-colors uppercase tracking-widest text-center text-justify">⚠️ 全DBリセット</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Summary Section -->
+        <section id="summary" class="bg-slate-900 text-white rounded-[3rem] p-12 lg:p-16 shadow-2xl relative overflow-hidden text-justify">
+            <div class="absolute top-0 right-0 p-12 opacity-10">
+                <i data-lucide="award" class="w-64 h-64 text-justify"></i>
+            </div>
+            <div class="relative z-10 text-justify">
+                <div class="flex items-center gap-4 mb-12">
+                    <div class="w-12 h-12 bg-blue-500 rounded-2xl flex items-center justify-center text-white text-justify">
+                        <i data-lucide="book-open"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold italic tracking-tight uppercase text-justify">Summary</h2>
+                </div>
+                <div class="grid md:grid-cols-2 gap-16 text-justify">
+                    <div class="space-y-10 text-justify">
+                        <div>
+                            <h4 class="text-blue-400 font-bold text-lg mb-4 border-l-4 border-blue-400 pl-4 uppercase tracking-tighter text-justify">1. ユーザー中心のシステム設計</h4>
+                            <p class="text-slate-300 leading-relaxed italic text-sm text-justify">
+                                AIができることよりも「利用者が直面している不便」にフォーカスしました。「質問例ボタン」や「管理者メニュー」を設けることで、ITリテラシーに関わらず誰もが組織の知識（規定、マニュアル、議事録等）を運用・検索できる形を追求しました。
+                            </p>
+                        </div>
+                        <div>
+                            <h4 class="text-blue-400 font-bold text-lg mb-4 border-l-4 border-blue-400 pl-4 uppercase tracking-tighter text-justify">2. 汎用的なRAGアーキテクチャの構築</h4>
+                            <p class="text-slate-300 leading-relaxed italic text-sm text-justify">
+                                今回の開発を通じて、入力するドキュメントの種類を問わず、高精度なナレッジベースを瞬時に構築できるRAGの標準的なパイプラインを確立しました。この仕組みは、総務規定から技術開発、営業資料まで、**あらゆる社内知識の活用に応用可能**です。
+                            </p>
+                        </div>
+                    </div>
+                    <div class="space-y-10">
+                        <div>
+                            <h4 class="text-blue-400 font-bold text-lg mb-4 border-l-4 border-blue-400 pl-4 uppercase tracking-tighter text-justify">3. 現場で「使い続けられる」ための判断</h4>
+                            <p class="text-slate-300 leading-relaxed italic text-sm text-justify">
+                                API制限や社内セキュリティを考慮し、埋め込みモデルをローカル実行にするなど、インフラや運用の制約をポジティブに解決する技術選定を行いました。実務に耐えうる「持続可能なAI活用」の視点を養うことができました。
+                            </p>
+                        </div>
+                        <div class="p-8 bg-white/5 border border-white/10 rounded-3xl backdrop-blur-sm text-center text-justify">
+                            <p class="text-xs italic leading-relaxed text-slate-400 text-justify">
+                                この「汎用的なAI実装力」を武器に、単一の課題解決に留まらず、組織全体の情報共有の在り方をトランスフォームできるエンジニアを目指します。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-20 px-6">
+        <div class="max-w-6xl mx-auto text-left">
+            <div class="grid md:grid-cols-2 gap-12 items-center text-center md:text-left text-justify text-justify">
+                <div>
+                    <h2 class="text-xl md:text-2xl font-bold mb-2 tracking-tight text-justify text-left">技術ポートフォリオ</h2>
+                    <p class="text-gray-400 text-sm font-light uppercase tracking-widest text-left">Internal Knowledge AI Assistant (RAG System)</p>
+                </div>
+                <div class="md:text-right space-y-4 text-justify">
+                    <p class="text-gray-400 text-sm leading-relaxed font-light text-justify">
+                        本アプリケーションは自己研鑽の一環として開発されました。
+                    </p>
+                    <p class="font-bold text-blue-400 tracking-widest uppercase">
+                        Developed by y.kawamorita
+                    </p>
+                </div>
+            </div>
+            <div class="mt-12 pt-8 border-t border-gray-800 text-center text-justify">
+                <p class="text-gray-600 text-[10px] tracking-[0.3em] uppercase italic font-light tracking-tighter text-justify">© 2025 AI Technical Portfolio.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Lucideアイコンの初期化
+        lucide.createIcons();
+
+        // ライトボックスを開く処理
+        function openLightbox(src) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            lightboxImg.src = src;
+            lightbox.style.display = 'flex';
+            setTimeout(() => lightbox.classList.add('active'), 10);
+        }
+
+        // ライトボックスを閉じる処理
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('active');
+            setTimeout(() => lightbox.style.display = 'none', 300);
+        }
+
+        // Chart.js の描画
+        const ctx = document.getElementById('impactChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['導入前 (有人対応)', '導入後 (AI自律型)'],
+                datasets: [{
+                    label: '月間想定対応時間 (h)',
+                    data: [80, 2],
+                    backgroundColor: ['#cbd5e1', '#3b82f6'],
+                    borderRadius: 12,
+                    hoverBackgroundColor: ['#94a3b8', '#2563eb']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { 
+                    y: { 
+                        beginAtZero: true, 
+                        grid: { color: '#f1f5f9' },
+                        title: { display: true, text: 'Time (Hours)', font: { weight: 'bold' } } 
+                    },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // デモ画面のタブ切り替え
+        function switchTab(type) {
+            const userTab = document.getElementById('userDemo');
+            const adminTab = document.getElementById('adminDemo');
+            const tabUserBtn = document.getElementById('tabUser');
+            const tabAdminBtn = document.getElementById('tabAdmin');
+
+            if(type === 'user') {
+                userTab.style.display = 'block';
+                adminTab.style.display = 'none';
+                tabUserBtn.classList.add('tab-active');
+                tabAdminBtn.classList.remove('tab-active');
+                tabAdminBtn.classList.add('text-slate-400');
+            } else {
+                userTab.style.display = 'none';
+                adminTab.style.display = 'block';
+                tabAdminBtn.classList.add('tab-active');
+                tabAdminBtn.classList.remove('text-slate-400');
+                tabUserBtn.classList.remove('tab-active');
+                tabUserBtn.classList.add('text-slate-400');
+            }
+        }
+
+        // 管理者認証シミュレーション
+        function tryAdminLogin() {
+            const pass = document.getElementById('adminPass').value;
+            if (pass === 'password1234') {
+                document.getElementById('adminLogin').style.display = 'none';
+                document.getElementById('adminPanel').classList.remove('hidden');
+                lucide.createIcons();
+            } else {
+                alert('パスワードが違います（password1234 を入力してください）');
+            }
+        }
+
+        // チャットシミュレーションのレスポンス
+        const responses = {
+            '慶弔休暇の申請期限と、必要な書類について教えてください。': {
+                ans: "慶弔休暇は、事象が発生してから「1ヶ月以内」に申請を行う必要があります。申請時には、挙式証明書、または死亡診断書の写しを添付の上、ワークフローシステムから申請してください。",
+                source: "就業規則_特別休暇編.pdf"
+            },
+            '副業は認められていますか？条件があれば教えてください。': {
+                ans: "はい、副業は認められていますが、条件があります。具体的には、本業の品位を損なわないこと、競合他社でないこと、および事前に「副業申請書」を提出し承認を得ることが必須です。",
+                source: "人事規定_2024.docx"
+            },
+            '社外へのPC持ち出しに関する規定を教えてください。': {
+                ans: "社外へのPC持ち出しについては、原則として上長の承認と「持ち出し管理簿」への記載が必要です。公共の場所での放置は禁止されており、紛失時には直ちに報告する義務があります。",
+                source: "セキュリティガイドライン.pptx"
+            }
+        };
+
+        function sendSample(text) {
+            const box = document.getElementById('chatBox');
+            
+            const userMsg = document.createElement('div');
+            userMsg.className = 'flex gap-4 justify-end';
+            userMsg.innerHTML = `
+                <div class="bg-blue-600 text-white p-5 rounded-2xl rounded-tr-none text-sm max-w-[85%] shadow-md leading-relaxed text-justify text-justify">
+                    ${text}
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center flex-shrink-0 text-justify">
+                    <i data-lucide="user" class="w-5 h-5 text-white"></i>
+                </div>
+            `;
+            box.appendChild(userMsg);
+            lucide.createIcons();
+            box.scrollTop = box.scrollHeight;
+
+            setTimeout(() => {
+                const res = responses[text];
+                const botMsg = document.createElement('div');
+                botMsg.className = 'flex gap-4 animate-pulse'; 
+                botMsg.innerHTML = `
+                    <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-200 text-justify">
+                        <i data-lucide="bot" class="w-5 h-5 text-white"></i>
+                    </div>
+                    <div class="bg-slate-100 p-5 rounded-2xl rounded-tl-none text-sm max-w-[85%] border border-slate-200 text-justify text-justify">
+                        <p>ドキュメントを確認中...</p>
+                    </div>
+                `;
+                box.appendChild(botMsg);
+                box.scrollTop = box.scrollHeight;
+
+                setTimeout(() => {
+                    botMsg.classList.remove('animate-pulse');
+                    botMsg.innerHTML = `
+                        <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-200">
+                            <i data-lucide="bot" class="w-5 h-5 text-white"></i>
+                        </div>
+                        <div class="bg-slate-100 p-5 rounded-2xl rounded-tl-none text-sm max-w-[85%] border border-slate-200 shadow-sm text-justify">
+                            <div class="mb-4 leading-relaxed">${res.ans}</div>
+                            <div class="flex items-center gap-2 text-[10px] text-blue-600 font-bold border-t border-slate-200 pt-3 uppercase tracking-tighter">
+                                <i data-lucide="file-check" class="w-3.5 h-3.5"></i> 参照元: ${res.source}
+                            </div>
+                        </div>
+                    `;
+                    lucide.createIcons();
+                    box.scrollTop = box.scrollHeight;
+                }, 1200);
+            }, 400);
+        }
+    </script>
+</body>
+</html>
