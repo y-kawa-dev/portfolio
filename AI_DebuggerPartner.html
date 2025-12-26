@@ -409,7 +409,7 @@
                     <div class="lg:w-5/12 order-3 lg:order-1 bg-white p-8 rounded-xl shadow-sm border border-slate-200">
                         <h3 class="text-xl font-bold text-slate-900 mb-2">調査・修復</h3>
                         <p class="text-slate-600 leading-relaxed mb-4">
-                            「修復スクリプト」ボタンをクリックすると、AIが安全性を考慮したPowerShellスクリプトを自動生成します。
+                            「修復スクリプト」ボタンをクリックすると、AIが<strong>問題原因の解決法を自動判断し、目的に応じた修復スクリプトを自動で生成</strong>します。
                         </p>
                         <p class="text-slate-600 leading-relaxed mb-4">
                             生成されたスクリプトは、いきなり実行されず<strong>「ステップごとの確認（Enterキーで進行）」</strong>機能が付与された安全設計です。
@@ -443,12 +443,12 @@
                         <div class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xl shadow-lg border-4 border-slate-50">3</div>
                     </div>
                     <div class="lg:w-5/12 order-2 lg:order-3">
-                        <div class="space-y-4">
-                            <div class="screenshot-frame bg-white p-2 relative group">
+                        <div class="space-y-4 flex gap-4">
+                            <div class="screenshot-frame bg-white p-2 relative group w-40">
                                 <img src="修復スクリプトボタン.png" alt="Step3: 生成前" class="zoom-image rounded" onclick="openModal(this.src)" onerror="this.onerror=null; this.src='https://placehold.co/800x200/e2e8f0/64748b?text=Repair+Button';">
                                 <span class="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded">AIによる生成開始</span>
                             </div>
-                            <div class="screenshot-frame bg-white p-2 relative group">
+                            <div class="screenshot-frame bg-white p-2 relative group w-full">
                                 <img src="修復スクリプトボタン押下後.png" alt="Step3: 生成後" class="zoom-image rounded" onclick="openModal(this.src)" onerror="this.onerror=null; this.src='https://placehold.co/800x200/e2e8f0/64748b?text=Download+Ready';">
                                 <span class="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded">ダウンロード準備完了</span>
                             </div>
@@ -480,18 +480,19 @@
 ==================================================
  AI Debugger Partner - Resolution Report
 ==================================================
- Date   : 2024-12-24 14:30:00
+ Date   : 2024-12-24 15:30:00
  Target : MEMORY.DMP
  Engine : Gemini (Cloud)
 ==================================================
 
 【障害概要】
 バグチェック 0xD1 (DRIVER_IRQL_NOT_LESS_OR_EQUAL) が発生しました。
-原因はネットワークドライバ `netwsw00.sys` が不正なメモリアドレスを参照したことです。
+原因は、古い Intel Wireless WiFi Link Driver (`netwsw00.sys`) が不正なメモリアドレスを参照したことによるものです。
 
-【対処結果・推奨アクション】
-1. デバイスマネージャーからネットワークアダプタのドライバを更新してください。
-2. 改善しない場合、当該ドライバをロールバックするか、メーカー公式サイトから最新版を再インストールしてください。
+【対処結果・完了アクション】
+1. AIが生成した修復スクリプトを実行し、DISMとSFCによるシステムファイルの整合性チェックを完了しました。破損ファイルは自動修復されました。
+2. その後、ネットワークアダプタのドライバを最新版 (v22.130.0.5) に手動更新しました。
+3. 再起動後、Wi-Fi接続が安定し、ブルースクリーンが発生しないことを確認しました。本件はクローズとします。
 
 ==================================================
  FULL LOG (Transaction History)
@@ -502,23 +503,7 @@ Windowsデバッグログを解析し、概要と解決策を提示します。
 
 [解析結果]
 バグチェックコード: 0xD1 (DRIVER_IRQL_NOT_LESS_OR_EQUAL)
-原因モジュール: netwsw00.sys (Intel Wireless WiFi Link Driver)
-
-このエラーは、カーネルモードのドライバが不正なアドレスにアクセスしようとしたことを示しています。具体的には、IntelのWi-Fiドライバが古いか破損している可能性が高いです。
-
-推奨される対処法:
-1. デバイスマネージャーを開き、ネットワークアダプターのドライバを更新してください。
-2. 問題が解決しない場合、メーカーのサポートページから最新のドライバをダウンロードしてインストールしてください。
-
-エラーコード: 0xD1
-
-👤 あなた
-初心者向けに原因を教えてください。
-
-🤖 Gemini
-簡単に言うと、パソコンの「無線LAN（Wi-Fi）を動かすソフト」が誤作動を起こして、Windowsがびっくりして止まってしまった状態です。
-
-Wi-Fiのソフト（ドライバ）を最新のものに入れ替えることで、直る可能性が高いですよ。
+...
                             </div>
                         </div>
                     </div>
