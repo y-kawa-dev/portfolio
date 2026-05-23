@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ポートフォリオ: 日本株投資シミュレーター</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap');
+
+  :root {
+    --bg: #0a0e17;
+    --surface: #111827;
+    --surface2: #1a2235;
+    --border: #1e2d45;
+    --accent: #00c853;
+    --accent2: #f44336;
+    --accent3: #29b6f6;
+    --gold: #ffd700;
+    --text: #e8eaf0;
+    --text-sub: #8899aa;
+    --tag-bg: #0d2137;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans JP', sans-serif;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── Header ── */
+  .site-header {
+    text-align: center;
+    padding: 12px 20px 8px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--text-sub);
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ── Hero ── */
+  .hero {
+    position: relative;
+    padding: 80px 20px 60px;
+    text-align: center;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 50% 0%, rgba(0,200,83,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 30% at 80% 80%, rgba(41,182,246,0.07) 0%, transparent 60%);
+  }
+  .hero-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: clamp(32px, 6vw, 60px);
+    font-weight: 700;
+    letter-spacing: 2px;
+    line-height: 1.1;
+    margin-bottom: 20px;
+  }
+  .hero-sub {
+    font-size: 15px;
+    color: var(--text-sub);
+    max-width: 540px;
+    margin: 0 auto 32px;
+    line-height: 1.8;
+  }
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+  .tag {
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 5px 14px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    color: var(--accent3);
+    letter-spacing: 1px;
+  }
+  .badge-row {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .badge {
+    background: linear-gradient(135deg, rgba(0,200,83,0.15), rgba(0,200,83,0.05));
+    border: 1px solid rgba(0,200,83,0.3);
+    border-radius: 6px;
+    padding: 6px 18px;
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 1px;
+  }
+
+  /* ── Section ── */
+  .section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 24px;
+  }
+  .section + .section { border-top: 1px solid var(--border); }
+  .section-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .section h2 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 28px;
+    color: var(--text);
+  }
+  .section p {
+    color: var(--text-sub);
+    font-size: 14px;
+    line-height: 1.9;
+    margin-bottom: 16px;
+  }
+
+  /* ── Feature Cards ── */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    margin-top: 8px;
+  }
+  .feature-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color .2s, transform .2s;
+  }
+  .feature-card:hover { border-color: rgba(0,200,83,0.4); transform: translateY(-2px); }
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+  }
+  .feature-card.red::before { background: linear-gradient(90deg, var(--accent2), transparent); }
+  .feature-card.blue::before { background: linear-gradient(90deg, var(--accent3), transparent); }
+  .feature-card.gold::before { background: linear-gradient(90deg, var(--gold), transparent); }
+  .fc-icon { font-size: 26px; margin-bottom: 12px; }
+  .fc-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .fc-desc { font-size: 13px; color: var(--text-sub); line-height: 1.8; }
+
+  /* ── Architecture Flow ── */
+  .arch-flow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    align-items: center;
+    justify-content: center;
+    margin: 32px 0;
+  }
+  .arch-node {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 18px;
+    text-align: center;
+    min-width: 100px;
+  }
+  .arch-node .node-icon { font-size: 20px; margin-bottom: 4px; }
+  .arch-node .node-label { font-size: 11px; color: var(--text-sub); letter-spacing: 1px; }
+  .arch-node .node-title { font-family: 'Share Tech Mono', monospace; font-size: 12px; color: var(--accent3); }
+  .arch-arrow {
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--border);
+    font-size: 20px;
+    padding: 0 6px;
+  }
+  .arch-branch {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .arch-node.green { border-color: rgba(0,200,83,0.3); }
+  .arch-node.green .node-title { color: var(--accent); }
+  .arch-node.red2 { border-color: rgba(244,67,54,0.3); }
+  .arch-node.red2 .node-title { color: var(--accent2); }
+  .arch-node.gold2 { border-color: rgba(255,215,0,0.3); }
+  .arch-node.gold2 .node-title { color: var(--gold); }
+
+  /* ── UI Mock (Streamlit layout) ── */
+  .ui-mock {
+    background: #0e1117;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 24px;
+    font-family: 'Noto Sans JP', sans-serif;
+  }
+  .mock-topbar {
+    background: #0e1117;
+    border-bottom: 1px solid #262730;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .mock-topbar-title { font-size: 13px; color: #fafafa; font-weight: 500; }
+  .mock-topbar-btn { font-size: 11px; color: #8899aa; background: #262730; border-radius: 4px; padding: 3px 10px; }
+
+  /* Streamlit layout: sidebar + main */
+  .mock-layout { display: flex; min-height: 480px; }
+
+  /* Sidebar */
+  .mock-sidebar {
+    width: 220px;
+    flex-shrink: 0;
+    background: #161b27;
+    border-right: 1px solid #262730;
+    padding: 16px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .sb-logo { font-size: 15px; font-weight: 700; color: #fafafa; margin-bottom: 8px; padding: 0 4px; }
+  .sb-status-closed {
+    background: rgba(180,30,30,0.25);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 12px;
+    color: #ff6b6b;
+    margin-bottom: 4px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .sb-info { font-size: 11px; color: #6b7a99; padding: 4px 4px; margin-bottom: 4px; line-height: 1.5; }
+  .sb-divider { border: none; border-top: 1px solid #262730; margin: 8px 0; }
+  .sb-nav-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 8px; border-radius: 6px;
+    font-size: 13px; color: #8899aa; cursor: default;
+  }
+  .sb-nav-item.active { background: rgba(255,255,255,0.07); color: #fafafa; }
+  .sb-nav-dot { width: 8px; height: 8px; border-radius: 50%; border: 1px solid #444; flex-shrink: 0; }
+  .sb-nav-dot.active { background: #00c853; border-color: #00c853; }
+  .sb-section-title { font-size: 11px; color: #6b7a99; padding: 8px 4px 4px; letter-spacing: 1px; }
+  .sb-asset-val { font-size: 24px; font-weight: 700; color: #fafafa; padding: 2px 4px; }
+  .sb-pnl { font-size: 12px; color: #f44336; padding: 0 4px 8px; }
+
+  /* Main content */
+  .mock-main { flex: 1; padding: 24px 28px; background: #0e1117; overflow: hidden; }
+  .mock-page-title { font-size: 28px; font-weight: 700; color: #fafafa; margin-bottom: 20px; }
+
+  /* KPI row */
+  .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+  .kpi-card { }
+  .kpi-label { font-size: 12px; color: #8899aa; margin-bottom: 4px; }
+  .kpi-val { font-size: 22px; font-weight: 700; color: #fafafa; line-height: 1.2; }
+  .kpi-val.red { color: #fafafa; }
+  .kpi-badge { display: inline-flex; align-items: center; gap: 4px; background: rgba(244,67,54,0.2); color: #f44336; border-radius: 4px; font-size: 11px; padding: 2px 6px; margin-top: 4px; }
+
+  .mock-divider { border: none; border-top: 1px solid #262730; margin: 4px 0 20px; }
+
+  /* Middle row: donut + table */
+  .mock-mid-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 20px; }
+  .mock-sub-title { font-size: 16px; font-weight: 600; color: #fafafa; margin-bottom: 16px; }
+
+  /* Donut chart */
+  .donut-wrap { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+  .donut-svg-wrap { flex-shrink: 0; }
+  .donut-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 16px; width: 100%; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #8899aa; white-space: nowrap; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+  /* Holdings table */
+  .hold-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .hold-table th { color: #6b7a99; padding: 6px 8px; text-align: left; font-weight: 400; font-size: 11px; border-bottom: 1px solid #262730; white-space: nowrap; }
+  .hold-table td { padding: 7px 8px; border-bottom: 1px solid rgba(38,39,48,0.8); color: #c8cdd8; white-space: nowrap; }
+  .hold-table tr:last-child td { border-bottom: none; }
+  .hold-pnl-zero { color: #6b7a99; }
+
+  /* Chart area */
+  .chart-section-title { font-size: 16px; font-weight: 600; color: #fafafa; margin-bottom: 12px; }
+  .chart-area {
+    background: transparent;
+    position: relative;
+    height: 100px;
+    overflow: hidden;
+  }
+  .chart-svg { width: 100%; height: 90px; }
+
+  /* ── Tech Stack ── */
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin-top: 8px;
+  }
+  .tech-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    transition: border-color .2s;
+  }
+  .tech-item:hover { border-color: rgba(41,182,246,0.3); }
+  .ti-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+  .ti-name { font-family: 'Share Tech Mono', monospace; font-size: 13px; color: var(--accent3); margin-bottom: 4px; }
+  .ti-desc { font-size: 12px; color: var(--text-sub); line-height: 1.6; }
+
+  /* ── Workflow Steps ── */
+  .workflow { display: flex; flex-direction: column; gap: 0; }
+  .wf-step { display: flex; gap: 20px; padding: 24px 0; position: relative; }
+  .wf-step + .wf-step { border-top: 1px solid var(--border); }
+  .wf-num {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: rgba(0,200,83,0.2);
+    line-height: 1;
+    flex-shrink: 0;
+    width: 48px;
+  }
+  .wf-content h3 { font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 8px; letter-spacing: 1px; }
+  .wf-content p { font-size: 13px; color: var(--text-sub); line-height: 1.8; }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center;
+    padding: 40px 20px;
+    font-size: 12px;
+    color: var(--text-sub);
+    border-top: 1px solid var(--border);
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 2px;
+  }
+
+  @media (max-width: 600px) {
+    .kpi-row { grid-template-columns: repeat(2, 1fr); }
+    .arch-flow { flex-direction: column; }
+    .arch-arrow { transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">SELF-DEVELOPMENT PORTFOLIO</header>
+
+<!-- ── Hero ── -->
+<section class="hero">
+  <div class="hero-label">// Project 05</div>
+  <h1>日本株投資<br>シミュレーター</h1>
+  <p class="hero-sub">
+    <strong>テクニカル指標</strong> と <strong>生成AI（Gemini）</strong> を組み合わせた<br>
+    本格的な日本株売買シミュレーション＆自動売買プラットフォーム。
+  </p>
+  <div class="tag-row">
+    <span class="tag">Python 3.10</span>
+    <span class="tag">Streamlit</span>
+    <span class="tag">Gemini API</span>
+    <span class="tag">yfinance</span>
+    <span class="tag">Plotly</span>
+    <span class="tag">SQLite</span>
+  </div>
+  <div class="badge-row">
+    <span class="badge">AI Auto-Trading</span>
+    <span class="badge">Backtest Engine</span>
+    <span class="badge">Real-time Data</span>
+  </div>
+</section>
+
+<!-- ── Why ── -->
+<div class="section">
+  <div class="section-label">// Background</div>
+  <h2>開発のこだわり：AIと指標の融合</h2>
+  <p>
+    単純なチャートビューアではなく、実際の投資判断プロセスを再現することを目指しました。
+    ルールベースのテクニカル指標（RSI / MACD）と、Gemini APIによる自然言語推論を組み合わせることで、
+    「なぜその判断を下したか」が説明できる透明性の高い自動売買エンジンを実装しています。
+  </p>
+  <p>
+    また、過去データを使ったバックテスト機能では日経225 Buy&Holdとの比較も行え、
+    戦略の実用的な有効性を定量的に検証できます。
+  </p>
+
+  <div class="feature-grid" style="margin-top:32px">
+    <div class="feature-card">
+      <div class="fc-icon">🤖</div>
+      <div class="fc-title">AI自動売買（Gemini）</div>
+      <div class="fc-desc">Gemini APIが30銘柄のRSI・MACD・トレンドを総合分析し、BUY / SELL / HOLDの判断と理由を自然言語で提示。コンセンサスモードで2AIが合意した場合のみ実行する安全弁も実装。</div>
+    </div>
+    <div class="feature-card red">
+      <div class="fc-icon">📊</div>
+      <div class="fc-title">バックテストエンジン</div>
+      <div class="fc-desc">テクニカル戦略とAI戦略それぞれで過去データを遡ってシミュレーション。最大ドローダウン・勝率・日経225超過収益を算出し、戦略の実力を可視化。</div>
+    </div>
+    <div class="feature-card blue">
+      <div class="fc-icon">🔔</div>
+      <div class="fc-title">リスク管理機構</div>
+      <div class="fc-desc">損切りライン・利確ライン・トレーリングストップを設定可能。サーキットブレーカー機能で総資産が一定水準を下回ると自動売買を強制停止。</div>
+    </div>
+    <div class="feature-card gold">
+      <div class="fc-icon">🌐</div>
+      <div class="fc-title">リアルタイム株価</div>
+      <div class="fc-desc">yfinanceで日本市場の株価をリアルタイム取得。取引時間判定・前日比・ローソク足チャートを自動表示。市場時間外は注文ボタンを自動無効化。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Architecture ── -->
+<div class="section">
+  <div class="section-label">// System Design</div>
+  <h2>システム構成とデータフロー</h2>
+
+  <div class="arch-flow">
+    <div class="arch-node">
+      <div class="node-icon">📡</div>
+      <div class="node-title">yfinance</div>
+      <div class="node-label">株価取得</div>
+    </div>
+    <div class="arch-arrow">›</div>
+    <div class="arch-node">
+      <div class="node-icon">⚙️</div>
+      <div class="node-title">Indicators</div>
+      <div class="node-label">RSI / MACD</div>
+    </div>
+    <div class="arch-arrow">›</div>
+    <div class="arch-node">
+      <div class="node-icon">🧠</div>
+      <div class="node-title">AI Engine</div>
+      <div class="node-label">判断ロジック</div>
+    </div>
+    <div class="arch-arrow">›</div>
+    <div class="arch-branch">
+      <div class="arch-node green">
+        <div class="node-title">Gemini API</div>
+        <div class="node-label">AI売買判断</div>
+      </div>
+      <div class="arch-node red2">
+        <div class="node-title">Signal Logic</div>
+        <div class="node-label">指標売買</div>
+      </div>
+    </div>
+    <div class="arch-arrow">›</div>
+    <div class="arch-node gold2">
+      <div class="node-icon">🗄️</div>
+      <div class="node-title">SQLite</div>
+      <div class="node-label">取引記録</div>
+    </div>
+    <div class="arch-arrow">›</div>
+    <div class="arch-node">
+      <div class="node-icon">📈</div>
+      <div class="node-title">Streamlit</div>
+      <div class="node-label">ダッシュボード</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── UI Mock (Interactive) ── -->
+<div class="section">
+  <div class="section-label">// App Workflow</div>
+  <h2>Actual Interface</h2>
+  <p>実際のアプリケーション画面です。左のメニューをクリックするとページが切り替わります。</p>
+
+  <div class="ui-mock">
+    <!-- Top bar -->
+    <div class="mock-topbar">
+      <div class="mock-topbar-title">📝 投資シミュレーター</div>
+      <div class="mock-topbar-btn">Deploy ⋮</div>
+    </div>
+
+    <div class="mock-layout">
+      <!-- Sidebar -->
+      <div class="mock-sidebar">
+        <div class="sb-logo">📝 投資シミュレーター</div>
+        <div class="sb-status-closed">
+          <span style="width:8px;height:8px;border-radius:50%;background:#f44336;display:inline-block;flex-shrink:0"></span>
+          休場
+        </div>
+        <div class="sb-info">次回開場まで 32時間25分（05/25 09:00〜）</div>
+        <div class="sb-info" style="color:#6b7a99;">
+          🔵 日経 中立（63,339）<br>
+          🔴 AI自動売買 停止中
+        </div>
+        <hr class="sb-divider">
+        <div class="sb-nav-item active" data-page="dashboard" onclick="switchPage('dashboard')">
+          <div class="sb-nav-dot active" id="dot-dashboard"></div>🏠 ダッシュボード
+        </div>
+        <div class="sb-nav-item" data-page="trade" onclick="switchPage('trade')">
+          <div class="sb-nav-dot" id="dot-trade"></div>📈 取引
+        </div>
+        <div class="sb-nav-item" data-page="portfolio" onclick="switchPage('portfolio')">
+          <div class="sb-nav-dot" id="dot-portfolio"></div>💼 ポートフォリオ
+        </div>
+        <div class="sb-nav-item" data-page="history" onclick="switchPage('history')">
+          <div class="sb-nav-dot" id="dot-history"></div>📋 取引履歴
+        </div>
+        <div class="sb-nav-item" data-page="backtest" onclick="switchPage('backtest')">
+          <div class="sb-nav-dot" id="dot-backtest"></div>📊 バックテスト
+        </div>
+        <div class="sb-nav-item" data-page="autobot" onclick="switchPage('autobot')">
+          <div class="sb-nav-dot" id="dot-autobot"></div>🤖 自動売買
+        </div>
+        <div class="sb-nav-item" data-page="settings" onclick="switchPage('settings')">
+          <div class="sb-nav-dot" id="dot-settings"></div>⚙️ 設定
+        </div>
+        <hr class="sb-divider">
+        <div class="sb-section-title">資産サマリー</div>
+        <div class="sb-section-title" style="color:#8899aa;padding-top:2px;">総資産</div>
+        <div class="sb-asset-val">¥107,843</div>
+        <div class="sb-pnl" style="color:#00c853;">損益: +¥7,843 (+7.84%)</div>
+      </div>
+
+      <!-- Main content area -->
+      <div class="mock-main" id="mock-main-content">
+
+        <!-- ===== DASHBOARD ===== -->
+        <div id="page-dashboard" class="mock-page">
+          <div class="mock-page-title">🏠 ダッシュボード</div>
+          <div class="kpi-row">
+            <div class="kpi-card"><div class="kpi-label">現金残高</div><div class="kpi-val">¥43,364</div></div>
+            <div class="kpi-card"><div class="kpi-label">株式評価額</div><div class="kpi-val">¥64,479</div></div>
+            <div class="kpi-card"><div class="kpi-label">総資産</div><div class="kpi-val">¥107,843</div></div>
+            <div class="kpi-card"><div class="kpi-label">損益</div><div class="kpi-val" style="color:#00c853;">+¥7,843 (+7.84%)</div><div class="kpi-badge" style="background:rgba(0,200,83,0.15);color:#00c853;">↑ +7,843</div></div>
+          </div>
+          <hr class="mock-divider">
+          <div class="mock-mid-row">
+            <div>
+              <div class="mock-sub-title">保有株の構成</div>
+              <div class="donut-wrap">
+                <div class="donut-svg-wrap">
+                  <svg width="150" height="150" viewBox="0 0 150 150">
+                    <circle cx="75" cy="75" r="50" fill="none" stroke="#4ecdc4" stroke-width="22" stroke-dasharray="136.3 177.7" stroke-dashoffset="0" transform="rotate(-90 75 75)"/>
+                    <circle cx="75" cy="75" r="50" fill="none" stroke="#ffe066" stroke-width="22" stroke-dasharray="58.1 255.9" stroke-dashoffset="-136.3" transform="rotate(-90 75 75)"/>
+                    <circle cx="75" cy="75" r="50" fill="none" stroke="#5b9bd5" stroke-width="22" stroke-dasharray="50.9 263.1" stroke-dashoffset="-194.4" transform="rotate(-90 75 75)"/>
+                    <circle cx="75" cy="75" r="50" fill="none" stroke="#e07b6a" stroke-width="22" stroke-dasharray="33.3 280.7" stroke-dashoffset="-245.3" transform="rotate(-90 75 75)"/>
+                    <circle cx="75" cy="75" r="50" fill="none" stroke="#7ecf85" stroke-width="22" stroke-dasharray="15.7 298.3" stroke-dashoffset="-278.6" transform="rotate(-90 75 75)"/>
+                    <circle cx="75" cy="75" r="50" fill="none" stroke="#f4a460" stroke-width="22" stroke-dasharray="13.2 300.8" stroke-dashoffset="-294.3" transform="rotate(-90 75 75)"/>
+                    <circle cx="75" cy="75" r="50" fill="none" stroke="#b8d96e" stroke-width="22" stroke-dasharray="6.7 307.3" stroke-dashoffset="-307.5" transform="rotate(-90 75 75)"/>
+                    <circle cx="75" cy="75" r="38" fill="#0e1117"/>
+                    <text x="75" y="72" text-anchor="middle" fill="#8899aa" font-size="9">43.4%</text>
+                    <text x="75" y="82" text-anchor="middle" fill="#6b7a99" font-size="8">現金</text>
+                  </svg>
+                </div>
+                <div class="donut-legend">
+                  <div class="legend-item"><div class="legend-dot" style="background:#4ecdc4"></div>現金</div>
+                  <div class="legend-item"><div class="legend-dot" style="background:#ffe066"></div>三菱UFJ</div>
+                  <div class="legend-item"><div class="legend-dot" style="background:#5b9bd5"></div>ルネサス</div>
+                  <div class="legend-item"><div class="legend-dot" style="background:#e07b6a"></div>ソニー</div>
+                  <div class="legend-item"><div class="legend-dot" style="background:#7ecf85"></div>日立製作所</div>
+                  <div class="legend-item"><div class="legend-dot" style="background:#f4a460"></div>メルカリ</div>
+                  <div class="legend-item"><div class="legend-dot" style="background:#b8d96e"></div>NTT</div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="mock-sub-title">保有銘柄サマリー</div>
+              <table class="hold-table">
+                <thead><tr><th>銘柄</th><th>コード</th><th>株数</th><th>現在価格</th><th>評価損益</th><th>損益率</th></tr></thead>
+                <tbody>
+                  <tr><td>メルカリ</td><td>4385.T</td><td>1</td><td>¥4,630</td><td style="color:#00c853;">+¥429</td><td style="color:#00c853;">+10.21%</td></tr>
+                  <tr><td>日立製作所</td><td>6501.T</td><td>1</td><td>¥5,380</td><td style="color:#00c853;">+¥378</td><td style="color:#00c853;">+7.56%</td></tr>
+                  <tr><td>ルネサス</td><td>6723.T</td><td>4</td><td>¥4,310</td><td style="color:#00c853;">+¥1,064</td><td style="color:#00c853;">+6.59%</td></tr>
+                  <tr><td>ソニーグループ</td><td>6758.T</td><td>3</td><td>¥3,742</td><td style="color:#00c853;">+¥651</td><td style="color:#00c853;">+6.16%</td></tr>
+                  <tr><td>三菱UFJ</td><td>8306.T</td><td>6</td><td>¥3,378</td><td style="color:#00c853;">+¥1,722</td><td style="color:#00c853;">+9.29%</td></tr>
+                  <tr><td>NTT</td><td>9432.T</td><td>14</td><td>¥161</td><td style="color:#00c853;">+¥112</td><td style="color:#00c853;">+5.23%</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <hr class="mock-divider">
+          <div class="chart-section-title">総資産の推移</div>
+          <div class="chart-area">
+            <svg class="chart-svg" viewBox="0 0 700 90" preserveAspectRatio="none">
+              <defs><linearGradient id="cg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#00c853" stop-opacity="0.25"/><stop offset="100%" stop-color="#00c853" stop-opacity="0"/></linearGradient></defs>
+              <polyline fill="url(#cg2)" stroke="none" points="0,70 80,65 160,62 240,58 300,55 360,48 420,42 480,35 560,28 630,20 700,14 700,90 0,90"/>
+              <polyline fill="none" stroke="#00c853" stroke-width="1.5" points="0,70 80,65 160,62 240,58 300,55 360,48 420,42 480,35 560,28 630,20 700,14"/>
+              <line x1="0" y1="70" x2="700" y2="70" stroke="#262730" stroke-width="1" stroke-dasharray="4,4"/>
+              <text x="620" y="66" fill="#6b7a99" font-size="9">初期資金</text>
+            </svg>
+          </div>
+        </div>
+
+        <!-- ===== 取引 ===== -->
+        <div id="page-trade" class="mock-page" style="display:none">
+          <div class="mock-page-title">📈 株式取引</div>
+          <div class="mock-sub-title" style="margin-bottom:12px;">銘柄を選択</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
+            <div class="stock-btn">トヨタ自動車<br><span>7203.T</span></div>
+            <div class="stock-btn">ソニーグループ<br><span>6758.T</span></div>
+            <div class="stock-btn active-stock">東京エレクトロン<br><span>8035.T</span></div>
+            <div class="stock-btn">三菱UFJ<br><span>8306.T</span></div>
+            <div class="stock-btn">NTT<br><span>9432.T</span></div>
+            <div class="stock-btn">メルカリ<br><span>4385.T</span></div>
+          </div>
+          <hr class="mock-divider">
+          <div class="mock-sub-title">東京エレクトロン（8035.T）</div>
+          <div class="kpi-row" style="grid-template-columns:repeat(3,1fr);margin-bottom:16px;">
+            <div class="kpi-card"><div class="kpi-label">現在株価</div><div class="kpi-val">¥22,100</div></div>
+            <div class="kpi-card"><div class="kpi-label">前日比</div><div class="kpi-val" style="color:#00c853">+¥320 (+1.47%)</div></div>
+            <div class="kpi-card"><div class="kpi-label">利用可能現金</div><div class="kpi-val">¥43,364</div></div>
+          </div>
+          <!-- Period selector -->
+          <div style="display:flex;gap:6px;margin-bottom:10px;">
+            <div style="padding:3px 10px;border-radius:4px;font-size:11px;background:#262730;color:#8899aa;cursor:default;">1週</div>
+            <div style="padding:3px 10px;border-radius:4px;font-size:11px;background:#00c853;color:#000;font-weight:700;cursor:default;">1ヶ月</div>
+            <div style="padding:3px 10px;border-radius:4px;font-size:11px;background:#262730;color:#8899aa;cursor:default;">3ヶ月</div>
+            <div style="padding:3px 10px;border-radius:4px;font-size:11px;background:#262730;color:#8899aa;cursor:default;">6ヶ月</div>
+            <div style="padding:3px 10px;border-radius:4px;font-size:11px;background:#262730;color:#8899aa;cursor:default;">1年</div>
+          </div>
+          <div style="background:#161b27;border:1px solid #262730;border-radius:8px;padding:14px 10px 8px;margin-bottom:12px;">
+            <svg width="100%" height="130" viewBox="0 0 580 130">
+              <!-- Y axis labels -->
+              <text x="4" y="14" fill="#6b7a99" font-size="9">23,000</text>
+              <text x="4" y="46" fill="#6b7a99" font-size="9">22,500</text>
+              <text x="4" y="78" fill="#6b7a99" font-size="9">22,000</text>
+              <text x="4" y="110" fill="#6b7a99" font-size="9">21,500</text>
+              <!-- Grid lines -->
+              <line x1="44" y1="12" x2="578" y2="12" stroke="#262730" stroke-width="0.5"/>
+              <line x1="44" y1="44" x2="578" y2="44" stroke="#262730" stroke-width="0.5"/>
+              <line x1="44" y1="76" x2="578" y2="76" stroke="#262730" stroke-width="0.5"/>
+              <line x1="44" y1="108" x2="578" y2="108" stroke="#262730" stroke-width="0.5"/>
+              <!-- X axis labels -->
+              <text x="52"  y="125" fill="#6b7a99" font-size="9">4/25</text>
+              <text x="120" y="125" fill="#6b7a99" font-size="9">5/01</text>
+              <text x="194" y="125" fill="#6b7a99" font-size="9">5/07</text>
+              <text x="268" y="125" fill="#6b7a99" font-size="9">5/13</text>
+              <text x="342" y="125" fill="#6b7a99" font-size="9">5/17</text>
+              <text x="416" y="125" fill="#6b7a99" font-size="9">5/21</text>
+              <text x="490" y="125" fill="#6b7a99" font-size="9">5/24</text>
+
+              <!-- Candlesticks: each = x(center), open, close, high, low -->
+              <!-- 1px = 500円として計算: base=22000, (price-21500)/500*96px -->
+              <!-- 赤=下落(open>close), 緑=上昇(close>open) -->
+
+              <!-- day1: o=21700 c=21900 h=22000 l=21600 → 緑 -->
+              <line x1="55" y1="19" x2="55" y2="100" stroke="#00c853" stroke-width="1"/>
+              <rect x="49" y="38" width="12" height="19" fill="#00c853"/>
+
+              <!-- day2: o=21900 c=21750 h=22050 l=21700 → 赤 -->
+              <line x1="75" y1="15" x2="75" y2="100" stroke="#f44336" stroke-width="1"/>
+              <rect x="69" y="44" width="12" height="29" fill="#f44336"/>
+
+              <!-- day3: o=21800 c=22100 h=22200 l=21750 → 緑 -->
+              <line x1="95" y1="7" x2="95" y2="96" stroke="#00c853" stroke-width="1"/>
+              <rect x="89" y="25" width="12" height="58" fill="#00c853"/>
+
+              <!-- day4: o=22100 c=22050 h=22300 l=22000 → 赤 -->
+              <line x1="115" y1="0" x2="115" y2="76" stroke="#f44336" stroke-width="1"/>
+              <rect x="109" y="26" width="12" height="10" fill="#f44336"/>
+
+              <!-- day5: o=22050 c=22200 h=22350 l=21980 → 緑 -->
+              <line x1="135" y1="0" x2="135" y2="80" stroke="#00c853" stroke-width="1"/>
+              <rect x="129" y="15" width="12" height="29" fill="#00c853"/>
+
+              <!-- day6: o=22200 c=21950 h=22250 l=21850 → 赤 -->
+              <line x1="155" y1="10" x2="155" y2="86" stroke="#f44336" stroke-width="1"/>
+              <rect x="149" y="34" width="12" height="48" fill="#f44336"/>
+
+              <!-- day7: o=21950 c=22050 h=22100 l=21880 → 緑 -->
+              <line x1="175" y1="18" x2="175" y2="90" stroke="#00c853" stroke-width="1"/>
+              <rect x="169" y="34" width="12" height="19" fill="#00c853"/>
+
+              <!-- day8: o=22050 c=22300 h=22450 l=21980 → 緑 -->
+              <line x1="195" y1="0" x2="195" y2="80" stroke="#00c853" stroke-width="1"/>
+              <rect x="189" y="10" width="12" height="48" fill="#00c853"/>
+
+              <!-- day9: o=22300 c=22150 h=22400 l=22050 → 赤 -->
+              <line x1="215" y1="0" x2="215" y2="76" stroke="#f44336" stroke-width="1"/>
+              <rect x="209" y="20" width="12" height="29" fill="#f44336"/>
+
+              <!-- day10: o=22150 c=22400 h=22500 l=22100 → 緑 -->
+              <line x1="235" y1="0" x2="235" y2="76" stroke="#00c853" stroke-width="1"/>
+              <rect x="229" y="0" width="12" height="48" fill="#00c853"/>
+
+              <!-- day11: o=22400 c=22250 h=22500 l=22180 → 赤 -->
+              <line x1="255" y1="0" x2="255" y2="69" stroke="#f44336" stroke-width="1"/>
+              <rect x="249" y="10" width="12" height="29" fill="#f44336"/>
+
+              <!-- day12: o=22250 c=22500 h=22600 l=22200 → 緑 -->
+              <line x1="275" y1="0" x2="275" y2="67" stroke="#00c853" stroke-width="1"/>
+              <rect x="269" y="0" width="12" height="48" fill="#00c853"/>
+
+              <!-- day13: o=22500 c=22350 h=22600 l=22250 → 赤 -->
+              <line x1="295" y1="0" x2="295" y2="67" stroke="#f44336" stroke-width="1"/>
+              <rect x="289" y="10" width="12" height="29" fill="#f44336"/>
+
+              <!-- day14: o=22350 c=22600 h=22700 l=22300 → 緑 -->
+              <line x1="315" y1="0" x2="315" y2="67" stroke="#00c853" stroke-width="1"/>
+              <rect x="309" y="0" width="12" height="48" fill="#00c853"/>
+
+              <!-- day15: o=22600 c=22480 h=22700 l=22380 → 赤 -->
+              <line x1="335" y1="0" x2="335" y2="60" stroke="#f44336" stroke-width="1"/>
+              <rect x="329" y="0" width="12" height="23" fill="#f44336"/>
+
+              <!-- day16: o=22480 c=22700 h=22800 l=22420 → 緑 -->
+              <line x1="355" y1="0" x2="355" y2="58" stroke="#00c853" stroke-width="1"/>
+              <rect x="349" y="0" width="12" height="42" fill="#00c853"/>
+
+              <!-- day17: o=22700 c=22550 h=22780 l=22480 → 赤 -->
+              <line x1="375" y1="0" x2="375" y2="58" stroke="#f44336" stroke-width="1"/>
+              <rect x="369" y="0" width="12" height="29" fill="#f44336"/>
+
+              <!-- day18: o=22550 c=22800 h=22900 l=22500 → 緑 -->
+              <line x1="395" y1="0" x2="395" y2="67" stroke="#00c853" stroke-width="1"/>
+              <rect x="389" y="0" width="12" height="48" fill="#00c853"/>
+
+              <!-- day19: o=22800 c=22650 h=22850 l=22580 → 赤 -->
+              <line x1="415" y1="0" x2="415" y2="56" stroke="#f44336" stroke-width="1"/>
+              <rect x="409" y="0" width="12" height="29" fill="#f44336"/>
+
+              <!-- day20: o=22650 c=22900 h=23000 l=22600 → 緑 -->
+              <line x1="435" y1="0" x2="435" y2="67" stroke="#00c853" stroke-width="1"/>
+              <rect x="429" y="0" width="12" height="48" fill="#00c853"/>
+
+              <!-- day21: o=22900 c=22780 h=22980 l=22700 → 赤 -->
+              <line x1="455" y1="0" x2="455" y2="56" stroke="#f44336" stroke-width="1"/>
+              <rect x="449" y="0" width="12" height="23" fill="#f44336"/>
+
+              <!-- day22: o=22780 c=23000 h=23100 l=22750 → 緑(current) -->
+              <line x1="475" y1="0" x2="475" y2="58" stroke="#00c853" stroke-width="1"/>
+              <rect x="469" y="0" width="12" height="42" fill="#00c853" opacity="0.9"/>
+
+              <!-- Current price line -->
+              <line x1="44" y1="2" x2="578" y2="2" stroke="#00c853" stroke-width="0.8" stroke-dasharray="3,3" opacity="0.6"/>
+              <rect x="544" y="0" width="34" height="11" rx="2" fill="#00c853" opacity="0.85"/>
+              <text x="561" y="9" fill="#000" font-size="8" text-anchor="middle" font-weight="bold">22,100</text>
+            </svg>
+          </div>
+          <div style="display:flex;gap:12px;">
+            <div style="flex:1;background:#161b27;border:1px solid #262730;border-radius:8px;padding:14px;">
+              <div style="color:#00c853;font-size:13px;font-weight:600;margin-bottom:10px;">買い注文</div>
+              <div class="kpi-label" style="margin-bottom:4px;">購入株数</div>
+              <div style="background:#0e1117;border:1px solid #262730;border-radius:4px;padding:6px 10px;font-size:13px;color:#fafafa;margin-bottom:8px;">1 株</div>
+              <div style="font-size:12px;color:#6b7a99;margin-bottom:10px;">必要金額: <b style="color:#fafafa">¥22,100</b></div>
+              <div class="mock-btn-primary">購入する</div>
+            </div>
+            <div style="flex:1;background:#161b27;border:1px solid #262730;border-radius:8px;padding:14px;">
+              <div style="color:#f44336;font-size:13px;font-weight:600;margin-bottom:10px;">売り注文</div>
+              <div style="font-size:12px;color:#6b7a99;padding:20px 0;text-align:center;">東京エレクトロンは保有していません。</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== ポートフォリオ ===== -->
+        <div id="page-portfolio" class="mock-page" style="display:none">
+          <div class="mock-page-title">💼 ポートフォリオ</div>
+          <table class="hold-table" style="margin-bottom:16px;">
+            <thead><tr><th>銘柄名</th><th>コード</th><th>株数</th><th>平均取得価格</th><th>現在価格</th><th>評価損益</th><th>損益率(%)</th></tr></thead>
+            <tbody>
+              <tr><td>メルカリ</td><td>4385.T</td><td>1</td><td>¥4,201</td><td>¥4,630</td><td style="color:#00c853;">+¥429</td><td style="color:#00c853;">+10.21</td></tr>
+              <tr><td>日立製作所</td><td>6501.T</td><td>1</td><td>¥5,002</td><td>¥5,380</td><td style="color:#00c853;">+¥378</td><td style="color:#00c853;">+7.56</td></tr>
+              <tr><td>ルネサス</td><td>6723.T</td><td>4</td><td>¥4,044</td><td>¥4,310</td><td style="color:#00c853;">+¥1,064</td><td style="color:#00c853;">+6.59</td></tr>
+              <tr><td>ソニーグループ</td><td>6758.T</td><td>3</td><td>¥3,525</td><td>¥3,742</td><td style="color:#00c853;">+¥651</td><td style="color:#00c853;">+6.16</td></tr>
+              <tr><td>三菱UFJ</td><td>8306.T</td><td>6</td><td>¥3,091</td><td>¥3,378</td><td style="color:#00c853;">+¥1,722</td><td style="color:#00c853;">+9.29</td></tr>
+              <tr><td>NTT</td><td>9432.T</td><td>14</td><td>¥153</td><td>¥161</td><td style="color:#00c853;">+¥112</td><td style="color:#00c853;">+5.23</td></tr>
+            </tbody>
+          </table>
+          <hr class="mock-divider">
+          <div class="kpi-row" style="grid-template-columns:repeat(3,1fr);">
+            <div class="kpi-card"><div class="kpi-label">株式取得総額</div><div class="kpi-val">¥56,636</div></div>
+            <div class="kpi-card"><div class="kpi-label">株式評価総額</div><div class="kpi-val">¥64,479</div></div>
+            <div class="kpi-card"><div class="kpi-label">評価損益合計</div><div class="kpi-val" style="color:#00c853;">+¥7,843 (+13.85%)</div></div>
+          </div>
+        </div>
+
+        <!-- ===== 取引履歴 ===== -->
+        <div id="page-history" class="mock-page" style="display:none">
+          <div class="mock-page-title">📋 取引履歴</div>
+          <table class="hold-table" style="margin-bottom:16px;">
+            <thead><tr><th>日時</th><th>コード</th><th>銘柄名</th><th>種別</th><th>株数</th><th>単価</th><th>合計金額</th></tr></thead>
+            <tbody>
+              <tr><td style="color:#6b7a99;font-size:11px;">2026-05-23 14:42</td><td>9432.T</td><td>NTT</td><td style="color:#00c853;">買い</td><td>14</td><td>¥153</td><td>¥2,142</td></tr>
+              <tr><td style="color:#6b7a99;font-size:11px;">2026-05-23 14:38</td><td>4385.T</td><td>メルカリ</td><td style="color:#00c853;">買い</td><td>1</td><td>¥4,201</td><td>¥4,201</td></tr>
+              <tr><td style="color:#6b7a99;font-size:11px;">2026-05-23 14:35</td><td>8306.T</td><td>三菱UFJ</td><td style="color:#00c853;">買い</td><td>6</td><td>¥3,091</td><td>¥18,546</td></tr>
+              <tr><td style="color:#6b7a99;font-size:11px;">2026-05-23 14:30</td><td>6758.T</td><td>ソニーグループ</td><td style="color:#00c853;">買い</td><td>3</td><td>¥3,525</td><td>¥10,575</td></tr>
+              <tr><td style="color:#6b7a99;font-size:11px;">2026-05-23 14:22</td><td>6723.T</td><td>ルネサス</td><td style="color:#00c853;">買い</td><td>4</td><td>¥4,044</td><td>¥16,176</td></tr>
+              <tr><td style="color:#6b7a99;font-size:11px;">2026-05-23 14:15</td><td>6501.T</td><td>日立製作所</td><td style="color:#00c853;">買い</td><td>1</td><td>¥5,002</td><td>¥5,002</td></tr>
+            </tbody>
+          </table>
+          <hr class="mock-divider">
+          <div class="kpi-row" style="grid-template-columns:repeat(3,1fr);">
+            <div class="kpi-card"><div class="kpi-label">総買付金額</div><div class="kpi-val">¥56,642</div></div>
+            <div class="kpi-card"><div class="kpi-label">総売却金額</div><div class="kpi-val">¥0</div></div>
+            <div class="kpi-card"><div class="kpi-label">取引回数</div><div class="kpi-val">6 回</div></div>
+          </div>
+        </div>
+
+        <!-- ===== バックテスト ===== -->
+        <div id="page-backtest" class="mock-page" style="display:none">
+          <div class="mock-page-title">📊 バックテスト</div>
+          <div style="display:flex;gap:8px;margin-bottom:16px;">
+            <div class="tab-pill active-tab">📈 テクニカル戦略</div>
+            <div class="tab-pill">🤖 AI戦略シミュレーション</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 2fr;gap:20px;">
+            <div>
+              <div class="mock-sub-title" style="font-size:14px;">設定</div>
+              <div class="form-row"><div class="kpi-label">銘柄</div><div class="form-select">トヨタ自動車（7203.T）▾</div></div>
+              <div class="form-row"><div class="kpi-label">戦略</div><div class="form-select">MACD + RSI ▾</div></div>
+              <div class="form-row"><div class="kpi-label">テスト期間</div><div class="form-select">2年 ▾</div></div>
+              <div class="form-row"><div class="kpi-label">初期資金</div><div class="form-select">¥1,000,000</div></div>
+              <div class="mock-btn-primary" style="margin-top:12px;">▶ バックテスト実行</div>
+            </div>
+            <div>
+              <div class="kpi-row" style="grid-template-columns:repeat(2,1fr);margin-bottom:12px;">
+                <div class="kpi-card"><div class="kpi-label">最終資産</div><div class="kpi-val">¥1,182,400</div></div>
+                <div class="kpi-card"><div class="kpi-label">損益</div><div class="kpi-val" style="color:#00c853">+¥182,400 (+18.2%)</div></div>
+                <div class="kpi-card"><div class="kpi-label">取引回数</div><div class="kpi-val">24 回</div></div>
+                <div class="kpi-card"><div class="kpi-label">勝率</div><div class="kpi-val">62.5%</div></div>
+              </div>
+              <div class="chart-area" style="height:90px;">
+                <svg width="100%" height="85" viewBox="0 0 500 85" preserveAspectRatio="none">
+                  <defs><linearGradient id="bt-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#00c853" stop-opacity="0.2"/><stop offset="100%" stop-color="#00c853" stop-opacity="0"/></linearGradient></defs>
+                  <polyline fill="url(#bt-g)" stroke="none" points="0,70 50,65 100,60 150,55 200,58 250,45 300,38 350,30 400,25 450,20 500,15 500,85 0,85"/>
+                  <polyline fill="none" stroke="#00c853" stroke-width="1.5" points="0,70 50,65 100,60 150,55 200,58 250,45 300,38 350,30 400,25 450,20 500,15"/>
+                  <polyline fill="none" stroke="#6b7a99" stroke-width="1" stroke-dasharray="3,3" points="0,70 500,40"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== 自動売買 ===== -->
+        <div id="page-autobot" class="mock-page" style="display:none">
+          <div class="mock-page-title">🤖 自動売買</div>
+          <div style="display:flex;gap:8px;margin-bottom:16px;">
+            <div class="tab-pill">📊 シグナル売買</div>
+            <div class="tab-pill active-tab">🤖 AI売買（Gemini）</div>
+          </div>
+          <div style="background:rgba(244,67,54,0.1);border:1px solid rgba(244,67,54,0.3);border-radius:6px;padding:10px 14px;font-size:12px;color:#f44336;margin-bottom:14px;">
+            🔴 AI自動売買 停止中 ｜ 最終実行: 未実行
+          </div>
+          <div class="mock-sub-title" style="font-size:14px;margin-bottom:10px;">📊 AI銘柄別判断（最新実行）</div>
+          <table class="hold-table">
+            <thead><tr><th>銘柄</th><th>現在価格</th><th>RSI</th><th>判断</th><th>確信度</th><th>理由</th><th>実行</th></tr></thead>
+            <tbody>
+              <tr><td>トヨタ自動車</td><td>¥3,862</td><td>42.3</td><td style="color:#00c853;font-weight:700;">🟢 BUY</td><td style="color:#ffd700;">🔥 HIGH</td><td style="color:#6b7a99;font-size:11px;">RSI低下・MACD反転兆候</td><td style="color:#00c853;font-size:11px;">✅ 3株 買い</td></tr>
+              <tr><td>ソニーグループ</td><td>¥3,525</td><td>58.7</td><td style="color:#6b7a99;">⚪ HOLD</td><td style="color:#29b6f6;">🌡 MED</td><td style="color:#6b7a99;font-size:11px;">トレンド不明確</td><td style="color:#6b7a99;font-size:11px;">-</td></tr>
+              <tr><td>東京エレクトロン</td><td>¥22,100</td><td>71.2</td><td style="color:#f44336;font-weight:700;">🔴 SELL</td><td style="color:#ffd700;">🔥 HIGH</td><td style="color:#6b7a99;font-size:11px;">RSI過熱・利確到達</td><td style="color:#f44336;font-size:11px;">✅ 1株 売り</td></tr>
+              <tr><td>三菱UFJ</td><td>¥3,091</td><td>50.1</td><td style="color:#6b7a99;">⚪ HOLD</td><td style="color:#29b6f6;">🌡 MED</td><td style="color:#6b7a99;font-size:11px;">様子見</td><td style="color:#6b7a99;font-size:11px;">-</td></tr>
+            </tbody>
+          </table>
+          <div style="display:flex;gap:10px;margin-top:16px;">
+            <div class="mock-btn-primary" style="flex:1;text-align:center;">▶ 自動実行を開始</div>
+            <div class="mock-btn-secondary" style="flex:1;text-align:center;">⚡ 今すぐ1回実行</div>
+            <div class="mock-btn-secondary" style="flex:1;text-align:center;">🔄 画面を更新</div>
+          </div>
+        </div>
+
+        <!-- ===== 設定 ===== -->
+        <div id="page-settings" class="mock-page" style="display:none">
+          <div class="mock-page-title">⚙️ 設定</div>
+          <div class="kpi-row" style="grid-template-columns:repeat(2,1fr);margin-bottom:20px;">
+            <div class="kpi-card"><div class="kpi-label">初期資金</div><div class="kpi-val">¥100,000</div></div>
+            <div class="kpi-card"><div class="kpi-label">現金残高</div><div class="kpi-val">¥43,364</div></div>
+          </div>          <hr class="mock-divider">
+          <div class="mock-sub-title" style="font-size:14px;margin-bottom:12px;">🤖 AI自動売買の詳細設定</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+            <div>
+              <div class="kpi-label" style="margin-bottom:8px;">サーキットブレーカー閾値（初期資金からの下落率）</div>
+              <div style="background:#161b27;border:1px solid #262730;border-radius:6px;padding:8px 12px;">
+                <div style="display:flex;justify-content:space-between;font-size:12px;color:#8899aa;margin-bottom:6px;"><span>-30%</span><span style="color:#fafafa;font-weight:600;">-15%</span><span>-5%</span></div>
+                <div style="background:#262730;border-radius:4px;height:4px;position:relative;"><div style="background:#00c853;height:4px;border-radius:4px;width:50%"></div></div>
+              </div>
+            </div>
+            <div>
+              <div class="kpi-label" style="margin-bottom:8px;">コンセンサスモード（2つのAIが合意した場合のみ取引）</div>
+              <div style="display:flex;align-items:center;gap:10px;padding:8px 0;">
+                <div style="width:36px;height:20px;background:#262730;border-radius:10px;position:relative;cursor:pointer;">
+                  <div style="width:16px;height:16px;background:#6b7a99;border-radius:50%;position:absolute;top:2px;left:2px;"></div>
+                </div>
+                <span style="font-size:12px;color:#6b7a99;">無効</span>
+              </div>
+            </div>
+          </div>
+          <hr class="mock-divider">
+          <div class="mock-sub-title" style="font-size:14px;margin-bottom:12px;">ポートフォリオのリセット</div>
+          <div style="background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.2);border-radius:6px;padding:10px 14px;font-size:12px;color:#ffd700;margin-bottom:12px;">⚠ リセットすると保有株・取引履歴・スナップショットがすべて削除されます。</div>
+          <div class="mock-btn-secondary" style="display:inline-block;">リセット実行</div>
+        </div>
+
+      </div><!-- /mock-main -->
+    </div><!-- /mock-layout -->
+  </div><!-- /ui-mock -->
+</div>
+
+<style>
+  .mock-page { animation: fadeIn .15s ease; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:none; } }
+  .sb-nav-item { cursor: pointer; transition: background .15s; }
+  .sb-nav-item:hover { background: rgba(255,255,255,0.05); border-radius:6px; }
+  .stock-btn { background:#161b27;border:1px solid #262730;border-radius:6px;padding:8px 12px;font-size:12px;color:#8899aa;cursor:default;text-align:center;line-height:1.4; }
+  .stock-btn span { font-size:10px;color:#6b7a99; }
+  .active-stock { border-color:rgba(0,200,83,0.4);color:#fafafa; }
+  .mock-btn-primary { background:#00c853;color:#000;border-radius:6px;padding:8px 16px;font-size:12px;font-weight:700;cursor:default;text-align:center; }
+  .mock-btn-secondary { background:#262730;color:#c8cdd8;border-radius:6px;padding:8px 16px;font-size:12px;cursor:default;text-align:center; }
+  .tab-pill { background:#161b27;border:1px solid #262730;border-radius:6px;padding:6px 14px;font-size:12px;color:#8899aa;cursor:default; }
+  .active-tab { background:#262730;color:#fafafa;border-color:#3a3f50; }
+  .form-row { margin-bottom:10px; }
+  .form-select { background:#161b27;border:1px solid #262730;border-radius:4px;padding:6px 10px;font-size:12px;color:#c8cdd8;margin-top:4px; }
+</style>
+
+<script>
+function switchPage(page) {
+  // Hide all pages
+  document.querySelectorAll('.mock-page').forEach(p => p.style.display = 'none');
+  // Remove active from all nav items and dots
+  document.querySelectorAll('.sb-nav-item').forEach(n => {
+    n.classList.remove('active');
+    n.querySelector('.sb-nav-dot').classList.remove('active');
+  });
+  // Show selected page
+  document.getElementById('page-' + page).style.display = 'block';
+  // Activate nav item
+  const navItem = document.querySelector('[data-page="' + page + '"]');
+  navItem.classList.add('active');
+  navItem.querySelector('.sb-nav-dot').classList.add('active');
+}
+</script>
+
+<!-- ── Workflow ── -->
+<div class="section">
+  <div class="section-label">// Key Features</div>
+  <h2>主要機能の詳細</h2>
+  <div class="workflow">
+    <div class="wf-step">
+      <div class="wf-num">01</div>
+      <div class="wf-content">
+        <h3>AI自動売買 — Gemini APIとの連携</h3>
+        <p>最大30銘柄のRSI・MACD・価格トレンド・保有状況を一括でGemini APIに送信。AIは各銘柄に対してBUY / SELL / HOLDの判断と確信度（HIGH / MED / LOW）、理由を返答。コンセンサスモードでは2回の独立した分析結果が一致した場合のみ実行し、誤シグナルを抑制します。</p>
+      </div>
+    </div>
+    <div class="wf-step">
+      <div class="wf-num">02</div>
+      <div class="wf-content">
+        <h3>AIバックテスト — 戦略の定量検証</h3>
+        <p>AI戦略と同一ルール（RSI/MACD/トレーリングストップ/セクター分散）で過去1〜5年のデータを遡りシミュレーション。最終資産・勝率・最大ドローダウン・日経225超過収益を算出し、資産推移グラフで戦略を可視化。銘柄別成績テーブルと全取引ログも確認可能です。</p>
+      </div>
+    </div>
+    <div class="wf-step">
+      <div class="wf-num">03</div>
+      <div class="wf-content">
+        <h3>AIトレンド自動更新</h3>
+        <p>全30銘柄の直近パフォーマンスをAIが分析し、注目度の高い銘柄を自動選択する機能。手動で全銘柄を監視するのではなく、AIに「今注目すべき銘柄」を絞り込んでもらうことで、無駄なAPI呼び出しとノイズを削減します。</p>
+      </div>
+    </div>
+    <div class="wf-step">
+      <div class="wf-num">04</div>
+      <div class="wf-content">
+        <h3>リスク管理 — 3層の安全弁</h3>
+        <p>① 銘柄ごとの<strong>損切り（Stop Loss）/ 利確（Take Profit）</strong>ライン設定。② 最高値からの下落率で自動損切りする<strong>トレーリングストップ</strong>（デフォルト8%）。③ 総資産が初期資金から一定水準（デフォルト-15%）を下回った際に自動売買を強制停止する<strong>サーキットブレーカー</strong>。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Tech Stack ── -->
+<div class="section">
+  <div class="section-label">// Powered By</div>
+  <h2>Technology Stack</h2>
+  <div class="tech-grid">
+    <div class="tech-item">
+      <div class="ti-icon">🐍</div>
+      <div>
+        <div class="ti-name">Python 3.10</div>
+        <div class="ti-desc">AIライブラリの豊富さと安定性を重視して選定。</div>
+      </div>
+    </div>
+    <div class="tech-item">
+      <div class="ti-icon">🎈</div>
+      <div>
+        <div class="ti-name">Streamlit</div>
+        <div class="ti-desc">迅速なGUI構築と7ページ構成のマルチページアプリを実現。</div>
+      </div>
+    </div>
+    <div class="tech-item">
+      <div class="ti-icon">✨</div>
+      <div>
+        <div class="ti-name">Gemini API</div>
+        <div class="ti-desc">長いコンテキストウィンドウを活かし、多銘柄を一括分析。</div>
+      </div>
+    </div>
+    <div class="tech-item">
+      <div class="ti-icon">📉</div>
+      <div>
+        <div class="ti-name">yfinance</div>
+        <div class="ti-desc">日本株・日経225のリアルタイム株価・ヒストリカルデータを取得。</div>
+      </div>
+    </div>
+    <div class="tech-item">
+      <div class="ti-icon">📊</div>
+      <div>
+        <div class="ti-name">Plotly</div>
+        <div class="ti-desc">ローソク足チャート・資産推移グラフ・ポートフォリオ円グラフを実装。</div>
+      </div>
+    </div>
+    <div class="tech-item">
+      <div class="ti-icon">🗄️</div>
+      <div>
+        <div class="ti-name">SQLite</div>
+        <div class="ti-desc">取引履歴・保有株・設定・ボットログを永続管理。外部DB不要。</div>
+      </div>
+    </div>
+    <div class="tech-item">
+      <div class="ti-icon">🧵</div>
+      <div>
+        <div class="ti-name">threading</div>
+        <div class="ti-desc">Streamlitのメインスレッドを止めずにバックグラウンド自動売買を実行。</div>
+      </div>
+    </div>
+    <div class="tech-item">
+      <div class="ti-icon">📐</div>
+      <div>
+        <div class="ti-name">pandas / numpy</div>
+        <div class="ti-desc">テクニカル指標の計算・バックテストのデータ処理に活用。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  © y.kawamorita — SELF-DEVELOPMENT PORTFOLIO
+</footer>
+
+</body>
+</html>
