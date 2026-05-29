@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -102,6 +102,9 @@
             <div class="flex items-center justify-center gap-2 mb-6">
                 <span class="px-4 py-1.5 bg-blue-500/20 text-blue-400 text-xs font-bold rounded-full border border-blue-500/30 tracking-widest uppercase">General-Purpose RAG Solution</span>
             </div>
+                <span class="px-3 py-1.5 bg-green-500/20 text-green-400 text-xs font-bold rounded-full border border-green-500/30 flex items-center gap-1 mt-2">
+                    <i data-lucide="refresh-cw" class="w-3 h-3"></i> 2026.05 更新：管理者認証をより安全な方式に改善
+                </span>
             <h1 class="text-4xl md:text-6xl font-extrabold mb-8 leading-tight text-white">
                 社内ナレッジ活用AIアシスタント
             </h1>
@@ -146,7 +149,7 @@
                         <i data-lucide="layers" class="text-blue-600 w-5 h-5"></i> あらゆる社内ファイルへの応用
                     </h3>
                     <p class="text-sm text-blue-800 leading-relaxed relative z-10 text-justify">
-                        今回のプロトタイプは「社内規定」を例としていますが、システム構成自体は**社内のあらゆるドキュメントに対応可能**な設計となっています。人事規定のみならず、製品仕様書、過去のプロジェクト報告書、カスタマーサポートのFAQなどをアップロードするだけで、即座に専門特化したAIアシスタントを構築できます。
+                        今回のプロトタイプは「社内規定」を例としていますが、システム構成自体は<strong>社内のあらゆるドキュメントに対応可能</strong>な設計となっています。人事規定のみならず、製品仕様書、過去のプロジェクト報告書、カスタマーサポートのFAQなどをアップロードするだけで、即座に専門特化したAIアシスタントを構築できます。
                     </p>
                 </div>
             </div>
@@ -189,7 +192,7 @@
                             </div>
                         </li>
                         <li class="flex items-start gap-3">
-                            <div class="mt-1 bg-emerald-100 text-emerald-600 p-1 rounded-full"><i data-lucide="check" class="w-3 h-3 text-justify text-justify text-justify text-justify text-justify text-justify text-justify text-justify text-justify text-justify text-justify text-justify text-justify text-justify text-justify"></i></div>
+                            <div class="mt-1 bg-emerald-100 text-emerald-600 p-1 rounded-full"><i data-lucide="check" class="w-3 h-3 text-justify"></i></div>
                             <div>
                                 <p class="text-sm font-bold text-justify">知識ベースの動的更新</p>
                                 <p class="text-xs text-slate-500">管理画面から新資料を追加するだけで、AIの知識が即座に同期されます。</p>
@@ -220,7 +223,7 @@
                                 <p class="text-xs font-bold text-slate-200">2. ベクトル検索</p>
                             </div>
                         </div>
-                        <div class="flex items-center gap-4 group pl-6 border-l-2 border-slate-800 text-justify text-justify">
+                        <div class="flex items-center gap-4 group pl-6 border-l-2 border-slate-800 text-justify">
                             <div class="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center group-hover:border-blue-500 transition-colors">
                                 <i data-lucide="cpu" class="w-5 h-5 text-blue-400"></i>
                             </div>
@@ -229,7 +232,7 @@
                             </div>
                         </div>
                         <div class="flex items-center gap-4 group text-justify">
-                            <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/20 text-justify text-justify">
+                            <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/20 text-justify">
                                 <i data-lucide="check-circle" class="w-5 h-5 text-white text-justify"></i>
                             </div>
                             <div class="flex-1">
@@ -270,7 +273,7 @@
                             </div>
                         </div>
                         <div class="flex items-center gap-4 group">
-                            <div class="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/20 text-justify text-justify">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/20 text-justify">
                                 <i data-lucide="refresh-cw" class="w-5 h-5 text-white"></i>
                             </div>
                             <div class="flex-1">
@@ -283,7 +286,7 @@
         </section>
 
         <!-- Technical Stack Section -->
-        <section id="tech-stack" class="text-justify text-justify">
+        <section id="tech-stack" class="text-justify">
             <div class="flex items-center gap-3 mb-12">
                 <div class="w-10 h-10 bg-slate-800 rounded-xl flex items-center justify-center text-white shadow-lg">
                     <i data-lucide="settings"></i>
@@ -297,17 +300,17 @@
                     </div>
                     <h4 class="font-bold text-lg text-slate-800">LLM</h4>
                     <p class="text-blue-600 font-bold text-sm tracking-tight uppercase text-justify">Gemini 2.5 Flash</p>
-                    <p class="text-xs text-slate-500 leading-relaxed text-justify text-justify">
+                    <p class="text-xs text-slate-500 leading-relaxed text-justify">
                         高い推論能力と高速なレスポンスを重視。広大なコンテキストウィンドウにより、長大な規定やマニュアルを精度高く要約できるため採用しました。
                     </p>
                 </div>
-                <div class="tech-card emerald bg-white p-8 rounded-3xl border border-slate-200 shadow-sm text-justify text-justify">
+                <div class="tech-card emerald bg-white p-8 rounded-3xl border border-slate-200 shadow-sm text-justify">
                     <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center text-justify">
                         <i data-lucide="database"></i>
                     </div>
                     <h4 class="font-bold text-lg text-slate-800 font-bold text-justify">Embedding</h4>
                     <p class="text-emerald-600 font-bold text-sm tracking-tight uppercase text-justify">multilingual-e5-small</p>
-                    <p class="text-xs text-slate-500 leading-relaxed text-justify text-justify text-justify">
+                    <p class="text-xs text-slate-500 leading-relaxed text-justify">
                         外部APIのレート制限を回避するためローカルモデルを採用。日本語の専門用語を含む検索において、高精度かつ高速なセマンティック検索を可能にします。
                     </p>
                 </div>
@@ -317,27 +320,27 @@
                     </div>
                     <h4 class="font-bold text-lg text-slate-800">Vector DB</h4>
                     <p class="text-indigo-600 font-bold text-sm tracking-tight uppercase">FAISS (Local)</p>
-                    <p class="text-xs text-slate-500 leading-relaxed text-justify text-justify text-justify text-justify">
+                    <p class="text-xs text-slate-500 leading-relaxed text-justify">
                         社内ローカル運用を想定し、軽量かつメモリ効率の高い検索エンジンを採用。数千ドキュメント規模でもミリ秒単位での検索が可能です。
                     </p>
                 </div>
-                <div class="tech-card orange bg-white p-8 rounded-3xl border border-slate-200 shadow-sm text-justify text-justify">
+                <div class="tech-card orange bg-white p-8 rounded-3xl border border-slate-200 shadow-sm text-justify">
                     <div class="w-12 h-12 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center">
                         <i data-lucide="box"></i>
                     </div>
                     <h4 class="font-bold text-lg text-slate-800 font-bold text-justify">Framework</h4>
                     <p class="text-orange-600 font-bold text-sm tracking-tight uppercase">LangChain / Streamlit</p>
-                    <p class="text-xs text-slate-500 leading-relaxed text-justify text-justify">
+                    <p class="text-xs text-slate-500 leading-relaxed text-justify">
                         複雑なRAGパイプラインを簡潔に実装。管理者向けUIを含めたフルスタックなWebアプリケーションを、汎用性を維持したまま構築しました。
                     </p>
                 </div>
-                <div class="tech-card purple bg-white p-8 rounded-3xl border border-slate-200 shadow-sm text-justify text-justify">
+                <div class="tech-card purple bg-white p-8 rounded-3xl border border-slate-200 shadow-sm text-justify">
                     <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center text-justify">
                         <i data-lucide="file-type"></i>
                     </div>
                     <h4 class="font-bold text-lg text-slate-800 text-justify">Data Loader</h4>
                     <p class="text-purple-600 font-bold text-sm tracking-tight uppercase">Unstructured</p>
-                    <p class="text-xs text-slate-500 leading-relaxed text-justify text-justify text-justify">
+                    <p class="text-xs text-slate-500 leading-relaxed text-justify">
                         PDF、Excel、PPTXなど、企業内に存在する多様なデータ形式から構造化情報を抽出し、知識化するためのコア技術です。
                     </p>
                 </div>
@@ -355,7 +358,7 @@
             
             <p class="text-xs text-slate-400 mb-8 flex items-center gap-1 text-justify text-left"><i data-lucide="mouse-pointer-2" class="w-3 h-3 text-justify"></i> 画像をクリックすると拡大表示します</p>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center text-justify text-justify">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center text-justify">
                 <!-- メイン画面 -->
                 <div class="group cursor-pointer relative" onclick="openLightbox('RAG_TOP.jpg')">
                     <div class="rounded-2xl overflow-hidden shadow-lg border border-slate-200 mb-4 bg-white p-1 relative">
@@ -420,7 +423,7 @@
                     </div>
                 </div>
 
-                <div id="adminDemo" class="admin-area text-justify text-justify">
+                <div id="adminDemo" class="admin-area text-justify">
                     <div id="adminLogin" class="flex flex-col items-center justify-center h-full space-y-6 text-justify">
                         <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center text-slate-300">
                             <i data-lucide="lock" class="w-8 h-8"></i>
@@ -446,7 +449,7 @@
                                 <div class="space-y-3 text-justify">
                                     <div class="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-100 text-xs shadow-sm">
                                         <span class="font-medium text-slate-700">就業規則_特別休暇編.pdf</span>
-                                        <button class="text-rose-500 hover:bg-rose-50 p-2 rounded-lg text-justify text-justify"><i data-lucide="trash-2" class="w-4 h-4 text-justify"></i></button>
+                                        <button class="text-rose-500 hover:bg-rose-50 p-2 rounded-lg text-justify"><i data-lucide="trash-2" class="w-4 h-4 text-justify"></i></button>
                                     </div>
                                     <div class="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-100 text-xs shadow-sm text-justify">
                                         <span class="font-medium text-slate-700 text-center">製品サポートマニュアル.docx</span>
@@ -484,7 +487,7 @@
                         <div>
                             <h4 class="text-blue-400 font-bold text-lg mb-4 border-l-4 border-blue-400 pl-4 uppercase tracking-tighter text-justify">2. 汎用的なRAGアーキテクチャの構築</h4>
                             <p class="text-slate-300 leading-relaxed italic text-sm text-justify">
-                                今回の開発を通じて、入力するドキュメントの種類を問わず、高精度なナレッジベースを瞬時に構築できるRAGの標準的なパイプラインを確立しました。この仕組みは、総務規定から技術開発、営業資料まで、**あらゆる社内知識の活用に応用可能**です。
+                                今回の開発を通じて、入力するドキュメントの種類を問わず、高精度なナレッジベースを瞬時に構築できるRAGの標準的なパイプラインを確立しました。この仕組みは、総務規定から技術開発、営業資料まで、<strong>あらゆる社内知識の活用に応用可能</strong>です。
                             </p>
                         </div>
                     </div>
@@ -510,7 +513,7 @@
     <!-- Footer -->
     <footer class="bg-gray-900 text-white py-20 px-6">
         <div class="max-w-6xl mx-auto text-left">
-            <div class="grid md:grid-cols-2 gap-12 items-center text-center md:text-left text-justify text-justify">
+            <div class="grid md:grid-cols-2 gap-12 items-center text-center md:text-left text-justify">
                 <div>
                     <h2 class="text-xl md:text-2xl font-bold mb-2 tracking-tight text-justify text-left">技術ポートフォリオ</h2>
                     <p class="text-gray-400 text-sm font-light uppercase tracking-widest text-left">Internal Knowledge AI Assistant (RAG System)</p>
@@ -636,7 +639,7 @@
             const userMsg = document.createElement('div');
             userMsg.className = 'flex gap-4 justify-end';
             userMsg.innerHTML = `
-                <div class="bg-blue-600 text-white p-5 rounded-2xl rounded-tr-none text-sm max-w-[85%] shadow-md leading-relaxed text-justify text-justify">
+                <div class="bg-blue-600 text-white p-5 rounded-2xl rounded-tr-none text-sm max-w-[85%] shadow-md leading-relaxed text-justify">
                     ${text}
                 </div>
                 <div class="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center flex-shrink-0 text-justify">
@@ -655,7 +658,7 @@
                     <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-200 text-justify">
                         <i data-lucide="bot" class="w-5 h-5 text-white"></i>
                     </div>
-                    <div class="bg-slate-100 p-5 rounded-2xl rounded-tl-none text-sm max-w-[85%] border border-slate-200 text-justify text-justify">
+                    <div class="bg-slate-100 p-5 rounded-2xl rounded-tl-none text-sm max-w-[85%] border border-slate-200 text-justify">
                         <p>ドキュメントを確認中...</p>
                     </div>
                 `;
