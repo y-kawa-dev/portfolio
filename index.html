@@ -40,7 +40,7 @@
 
         <p class="text-xs text-slate-500 uppercase tracking-[0.2em] font-semibold text-center mb-8">Projects</p>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
             <!-- AI家計簿アプリ -->
             <a href="ai-receipt-app.html" class="card-hover block bg-slate-800/60 border border-slate-700 rounded-2xl p-6 group">
@@ -57,6 +57,24 @@
                     <span class="text-[10px] bg-slate-700 text-slate-300 px-2 py-0.5 rounded-full">Gemini 2.5 Flash</span>
                     <span class="text-[10px] bg-slate-700 text-slate-300 px-2 py-0.5 rounded-full">Python / Streamlit</span>
                     <span class="text-[10px] bg-green-800/60 text-green-300 px-2 py-0.5 rounded-full">2026.05 更新</span>
+                </div>
+            </a>
+
+            <!-- インフラ自動化（IaC） -->
+            <a href="terraform-cicd.html" class="card-hover block bg-slate-800/60 border border-orange-700/40 rounded-2xl p-6 group">
+                <div class="flex items-start justify-between mb-4">
+                    <span class="text-3xl">🔧</span>
+                    <span class="text-xs text-slate-500 group-hover:text-orange-400 transition-colors">見る →</span>
+                </div>
+                <h2 class="text-lg font-bold mb-2 group-hover:text-orange-300 transition-colors">インフラ自動化（IaC）</h2>
+                <p class="text-slate-400 text-sm leading-relaxed mb-4">
+                    AI家計簿アプリを題材にTerraformでAWS 3層構造をコード化。GitHub ActionsとOIDC連携で、pushだけで自動デプロイされるCI/CDパイプラインを構築。
+                </p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="text-[10px] bg-orange-900/40 text-orange-300 px-2 py-0.5 rounded-full">Terraform</span>
+                    <span class="text-[10px] bg-slate-700 text-slate-300 px-2 py-0.5 rounded-full">AWS ECS Fargate</span>
+                    <span class="text-[10px] bg-slate-700 text-slate-300 px-2 py-0.5 rounded-full">GitHub Actions</span>
+                    <span class="text-[10px] bg-slate-700 text-slate-300 px-2 py-0.5 rounded-full">OIDC</span>
                 </div>
             </a>
 
